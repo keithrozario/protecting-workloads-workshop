@@ -10,7 +10,7 @@ You are now going to design and implement an AWS WAF ruleset to help mitigate th
 
 !!! Attention
     <p style="font-size:14px;">
-      Please insure you are **using the AWS WAF Classic** console experience for this workshop.
+      Please insure you are **using the improved AWS WAF console and API experience** for this workshop.
     </p>
 
 ## Identify the WAF ACL for your Site
@@ -32,7 +32,7 @@ Once selected, you will be redirected to the AWS WAF & AWS Shield service consol
 4. Click on the WAF Web ACL Name to select the existing Web ACL. Once the detail pane is loaded on the left of your screen, you will see three tabs: Requests, Rules, and Logging. Toggle to Rules:
 
 ![WAF ACL Rules](./images/waf-acl-rules.png)
-Validate that you are able to see a pre-existing rule, configured to block requests, and that your Web ACL is associated with an Application load balancer resource. You can drill down further into the properties of the existing rule, by clicking on the rule name. You should see 2 entries into the associated IP address list for the loopback/localhost IP addresses (127.0.0.0/8, ::1/128).
+Validate that you are able to see a pre-existing rule, configured to block requests, and that your Web ACL is associated with an Application load balancer resource. You can drill down further into the properties of the existing rule, by selecting the rule name and clicking **Edit**. This rule references IP sets for the loopback/localhost IP addresses (127.0.0.0/8, ::1/128).
 
 !!! info "Viewing and Logging Requests"
     _In the Requests tab, you can view a <a href="https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-testing.html#web-acl-testing-view-sample" target="_blank">sample of the requests</a> that have been inspected by the WAF. For each sampled request, you can view detailed data about the request, such as the originating IP address and the headers included in the request. You also can view which rule the request matched, and whether the rule is configured to allow or block requests. You can refer to the sampled requests throughout this exercise to monitor activity and look for suspicious activity. Although not used in this workshop, in the Logging tab, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/logging.html" target="_blank">you can enable full logging</a> to get detailed information about traffic that is analyzed by your web ACL._
@@ -41,16 +41,22 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 
 ###Basics
 
-AWS WAF rules consist of conditions. Conditions are lists of specific filters (patterns) that are being matched against the HTTP request components processed by AWS WAF. The filters, including their attributes, are specific to the type of condition supported by AWS WAF. A condition, as a whole, is considered as _matched_, if any one of the listed filters is matched.
+You use AWS WAF to control how an Amazon CloudFront distribution, an Amazon API Gateway API, or an Application Load Balancer responds to web requests.
 
-Rules contain one or more conditions. Each condition attached to a rule is called a predicate. Predicates are evaluated using Boolean logic. A predicate is evaluated as matched or not matched (negated predicted), and multiple predicates are evaluated using Boolean AND – all predicates must match for the rule action to be triggered.
+**Web ACLs** – You use a web access control list (ACL) to protect a set of AWS resources. You create a web ACL and define its protection strategy by adding rules. Rules define criteria for inspecting web requests and specify how to handle requests that match the criteria. You set a default action for the web ACL that indicates whether to block or allow through those requests that pass the rules inspections.
 
-Web ACLs are ordered lists of rules. They are evaluated in order for each HTTP request and the action of the first matching rule is taken by the WAF engine, whether that is to allow, block or count the request. If no rule matches, the default action of the web ACL prevails.
+**Rules** – Each rule contains a statement that defines the inspection criteria, and an action to take if a web request meets the criteria. When a web request meets the criteria, that's a match. You can use rules to block matching requests or to allow matching requests through. You can also use rules just to count matching requests.
 
-![How AWS WAF Works](./images/how-waf-works.png)
+**Rules groups** – You can use rules individually or in reusable rule groups. AWS Managed Rules and AWS Marketplace sellers provide managed rule groups for your use. You can also define your own rule groups.
 
-!!! info "Note About Conditions and Rules"
-    Conditions and rules are reusable resources within the region in which they are created.  You should consider the effects of changes to WAF conditions and rules in your organizations change control procedures.
+Rule statements are the part of a rule that tells AWS WAF how to inspect a web request. When AWS WAF finds the inspection criteria in a web request, we say that the web request matches the statement. Every rule statement specifies what to look for and how, according to the statement type.
+
+Every rule in AWS WAF has a single top-level rule statement, which can contain other statements. Rule statements can be very simple. For example, you could have a statement that provides just a set of originating countries to check your web requests for. Rule statements can also be very complex. For example, you could have a statement that combines many other statements with logical AND, OR, and NOT statements.
+
+#### How WAF Works
+![How WAF Works](./images/how-waf-works.png)
+
+After you create your web ACL, you can associate it with one or more AWS resources. The resource types that you can protect using AWS WAF web ACLs are Amazon CloudFront distributions, Amazon API Gateway APIs, and Application Load Balancers.
 
 !!! info "Note About This Section"
     **In order to illustrate the process of creating WAF conditions and rules, we will walk through the creation of the first rule in your WAF ACL.** The complete list of threats and solutions is available in the <a href="./#waf-rule-creation-and-solutions">WAF Rule Creation and Solutions</a> section.
@@ -65,20 +71,6 @@ To create a rule, you have to create the relevant match conditions first. This p
 4.	How can you define the purpose of the rule in a Boolean logic expression?
 5.	What conditions do you need to create to implement the logic?
 6.	Are any transformations relevant to my input content type?
-
-####AWS WAF Concepts:
-
-The following illustration shows AWS WAF Conditions, Rules and Web ACL's.
-
-![AWS WAF Concepts](./images/waf-concepts.png)
-
-The following illustration shows how AWS WAF checks the rules and performs the actions based on those rules.
-
-![AWS WAF Concepts](./images/web-acl-3a.png)
-
-###Example Rule Design and Creation:
-
-As an example, lets say we want to build a rule to detect and block SQL Injection in received in query strings. Let’s see how these questions help us plan the implementation of the rule. _This walkthrough will get you started with the ruleset required to mitigate the simulated threats in the workshop. It's purpose is to help you better understand the rule creation process. You will create the remaining rules from solution hints provided below._
 
 ####Sample Rule purpose:
 
@@ -95,49 +87,29 @@ As an example, lets say we want to build a rule to detect and block SQL Injectio
 
 ####Sample Rule - Conditions to implement:
 
-- **SQL injection Match Condition** targeting the request **Query string**
+- **Contains SQL injection attacks Match type** targeting the request **Query string**
 
 ####Relevant transformations:
 
-- **SQL Injection Match Condition** query string is URL encoded, so we will apply the **URL_DECODE** transformation.
+- **Contains SQL injection attacks Match type** query string is URL encoded, so we will apply the **URL_DECODE** transformation.
 
 ####Rules to implement:
 
-- Rule with 1 predicate matching SQL injection condition
+- Rule with 1 predicate Contains SQL injection attacks Match type
 
 ##Console Walkthrough - Creating a Condition and Rule
 
-1. In the AWS WAF console, create a SQL injection condition by selecting **SQL injection** matching from the side-bar menu to the left of the console, under the **Conditions** heading.
+1. In the AWS WAF console, create a SQL injection rule by clicking the Web ACL, **Add rules**, **Add my own rules and rule groups**
 
-2.	Click on **Create Condition**:
+2.	Click on **Rule builder**, provide **matchSQLi** for the **Name** and keep **Regular rule** for **Type**:
 
-![WAF Condition Home](./images/waf-condition-home.png)
-3.	Provide **filterSQLi** for the **Name** and select the region where you deployed the stack. Add a filter (pattern) to the condition. Set the **Part of the request to filter on** to **Query string** and set the **Transformation** to **URL decode**. Click **Add filter** and then click **Create**.
+![WAF Rule 1](./images/waf-add-rule-1.png)
+3.	For **If a request** select **matches the statement**. Under **Statement**, for **Insepect** select **Query string**, for **Match type** select **Contains SQL injection attacks**, for **Text transformation** select **URL decode** and for **Action** select **Block**.
 
-![Create String Match](./images/create-sqli-match.png)
-4. With the condition created, and any additional conditions created based on need as well, you are ready to create a rule. In the AWS WAF console, select **Rules** from the side-bar menu to the left of the console, under the **AWS WAF** heading.
+![WAF Rule 2](./images/waf-add-rule-2.png)
+4.	Click on **Add Rule** and then click **Save**
 
-5\.	Click on **Create Rule**:
-
-![Create Rule](./images/waf-rules-home.png)
-6.	Provide **matchSQLi** for the name, metric name and sect the region where you deployed the stack. Set the **rule type** to **Regular rule**.
-
-![Create Rule Detail](./images/create-rule-detail.png)
-7.	Add a condition to the rule. For our rule example, choose “When a request” **does** (no negation) **match at least one of the filters in the SQL injection match condition**. Choose the SQL injection condition you have previously created.
-
-![Add Conditions](./images/add-conditions.png)
-8.	Click **Add Condition** and click **Create** at the bottom of the screen.
-
-9\. Follow the steps in the <a href="./#identify-the-waf-acl-for-your-site">Identify the WAF ACL for your site</a> section above to go back to the Rules tab of your web ACL.
-
-10\.	Click **Edit web ACL**.
-![Edit Web ACL](./images/edit-web-acl.png)
-
-11\. In the **Rules** dropdown, select your rule, and click **Add rule to web ACL**.
-
-12\. Reorder the rules as appropriate for your use case.
-
-13\. Click **Update** to persist the changes.
+5. View the **matchSQLi** rule in the **Rule visual editor** to confirm it is correct.
 
 !!! info "Additional Resources"
     For a more comprehensive discussion of common vulnerabilities for web applications, as well as how to mitigate them using AWS WAF, and other AWS services, please refer to the <a href="https://d0.awsstatic.com/whitepapers/Security/aws-waf-owasp.pdf" target="_blank">Use AWS WAF to Mitigate OWASP’s Top 10 Web Application Vulnerabilities whitepaper</a>.
@@ -154,56 +126,221 @@ In this phase, we will have a set of 6 exercises walking you through the process
 Use the SQL injection, cross-site scripting, as well as string and regex matching conditions to build rules that mitigate injection attacks and cross site scripting attacks.
 
 Consider the following:
+
 - How does your web application accept end-user input (whether directly or indirectly). Which HTTP request components does that input get inserted into?
 - What kind of content encoding considerations do you need to factor in for the input format?
 - What considerations do you need to account for in regards to false positives? For example, does your application legitimately need to accept SQL statements as input?
 
 How do the requirements derived from the above questions affect your solution?
 
-??? info "Solution"
-    1.	update the **SQL injection** condition named filterSQLi with 2 additional filters
-        1. query_string, url decode _You should have created this filter in <a href="./#console-walkthrough-creating-a-condition-and-rule">the walk through above</a>_
-        2. body, html decode
-        3. header, cookie, url decode
-    2.  View the existing matchSQLi rule to confirm additional filters 
-    3.	create **Cross-site scripting** condition named filterXSS with 4 filters
-        1. query_string, url decode
-        2. body, html decode
-        3. body, url decode
-        4. header, cookie, url decode
-    4.	create a **String and regex matching** _String match_ condition named filterXSSPathException with 1 filter. _This demonstrates how to add an exception for the XSS rule_ 
-	    1. uri, starts with, no transform, _/reportBuilder/Editor.aspx_
-    5.	create a rule named matchXSS
-        1. type regular
-        2. does match XSS condition: filterXSS
-        3. does not match string match condition: filterXSSPathException
-    6.	add rules to Web ACL
-    7.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
+??? info "SQL Injection Solution"
+    1.	Update the **matchSQLi** rule with 2 additional conditions
+        1. Select the **matchSQLi** rule and click **Edit** (_You should have created this rule in <a href="./#console-walkthrough-creating-a-condition-and-rule">the walk through above</a>_)
+        2. Change **If a request** to **matches at least one of the statements (OR)**
+        3. Click **Add another statement**: body, contains sql injection attacks, html entity decode and URL decode
+        4. Click **Add another statement**: header, cookie, contains sql injection attacks, url decode
+    2.  View the existing matchSQLi rule to confirm additional condtions
+    3.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
+
+!!! info "Rule JSON editor"
+    On the console, you don't see these represented as rule statements, but every web ACL has a JSON format representation. In there, you see these special types of rule statements. For rules of any complexity, managing your web ACL using the JSON editor is the easiest way to go. You can retrieve the complete configuration for a web ACL in JSON format, modify it as you need, and then provide it through the console, API, or CLI. AWS WAF supports nesting of rule statements. To combine rule statement results, you nest the statements under logical AND or OR rule statements. The visual editor on the console supports one level of rule statement nesting, which works for many needs. To nest more levels, you can edit the JSON representation of the rule on the console.
+
+??? info "Cross Site Scripting Solution"
+    1.	Create a new rule named **matchXSS** and for **If a request** choose **matches at least one of the statements (OR)**. Add conditions:
+        1. all query parameters, contains xss injection attacks, url decode
+        2. body, contains xss injection attacks, html enity decode
+        3. body, contains xss injection attacks, url decode
+        4. header, cookie (_type manually_), contains xss injection attacks, url decode
+        5. Click on **Add Rule** and then click **Save**
+    2.	Click the **Rule JSON editor** and note the structure and syntax of the rule logic. 
+    3. Add an exception condition for the XSS rule to allow access to _/reportBuilder/Editor.aspx_. _Note that we are using the JSON editor here due to the nested logic requred fo rthe exception._
+
+	    1. Clear the existing editor content for the matchXSS rule and paste the following JSON
+
+        <details><summary>Nested Statement with XSS Exception Solution</summary>
+        <p>
+        
+            {
+                "Name": "matchXSS",
+                "Priority": 0,
+                "Action": {
+                    "Block": {}
+                },
+                "VisibilityConfig": {
+                    "SampledRequestsEnabled": true,
+                    "CloudWatchMetricsEnabled": true,
+                    "MetricName": "matchXSS"
+                },
+                "Statement": {
+                    "AndStatement": {
+                        "Statements": [{
+                                "NotStatement": {
+                                    "Statement": {
+                                        "ByteMatchStatement": {
+                                            "SearchString": "/reportBuilder/Editor.aspx",
+                                            "FieldToMatch": {
+                                                "UriPath": {}
+                                            },
+                                            "TextTransformations": [{
+                                                "Priority": 0,
+                                                "Type": "NONE"
+                                            }],
+                                            "PositionalConstraint": "STARTS_WITH"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "OrStatement": {
+                                    "Statements": [{
+                                            "XssMatchStatement": {
+                                                "FieldToMatch": {
+                                                    "QueryString": {}
+                                                },
+                                                "TextTransformations": [{
+                                                    "Priority": 0,
+                                                    "Type": "URL_DECODE"
+                                                }]
+                                            }
+                                        },
+                                        {
+                                            "XssMatchStatement": {
+                                                "FieldToMatch": {
+                                                    "Body": {}
+                                                },
+                                                "TextTransformations": [{
+                                                        "Priority": 0,
+                                                        "Type": "HTML_ENTITY_DECODE"
+                                                    },
+                                                    {
+                                                        "Priority": 1,
+                                                        "Type": "URL_DECODE"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "XssMatchStatement": {
+                                                "FieldToMatch": {
+                                                    "SingleHeader": {
+                                                        "Name": "cookie"
+                                                    }
+                                                },
+                                                "TextTransformations": [{
+                                                    "Priority": 0,
+                                                    "Type": "URL_DECODE"
+                                                }]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+
+        </p>
+        </details>
+
+    4. Click **Save rule**
+    5.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
 ### 2. Enforce Request Hygiene
 
 Use the string and regex matching, size constraints and IP address match conditions to build rules that block non-conforming or low value HTTP requests.
 
 Consider the following:
+
 •	Are there limits to the size of the various HTTP request components relevant to your web application? For example, does your application ever use URIs that are longer than 100 characters in size?
+
 •	Are there specific HTTP request components without which your application cannot operate effectively (e.g. CSRF token header, authorization header, referrer header)?
 
 Build rules that ensure the requests your application ends up processing are valid, conforming and valuable.
 
 ??? info "Solution"
-    1.	create **String and regex matching** _String match_ type condition named filterFormProcessor with 1 filter
-        1.	uri, starts with, no transform, _/form.php_
-    2.	create string match condition named filterPOSTMethod with 1 filter
-        1.	uri, exactly matches, no transform, _/form.php_
-    3.	create **String and regex matching** _Regex match_ condition named filterCSRFToken with 1 filter
-        1.	header x-csrf-token (_type in manually_), url decode, create regex pattern set named _csrf_, matches pattern: _^[0-9a-f]{40}$_
-    4.	create rule named matchCSRF
-        1.	type regular
-        2.	does match string condition: filterFormProcessor
-        3.	does match string condition: filterPOSTMethod
-        4.	does not match regex match condition: filterCSRFToken
-    5.	add rules to Web ACL
-    6.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
+    1.	In the left pane, choose **Regex pattern sets**, **Create regex pattern set** 
+        1.	**Regex pattern set name** _csrf_, **Regular expressions** _^[0-9a-f]{40}$_
+
+    2.	Create a new rule and choose **Rule JSON editor**
+
+	    1. Paste the following JSON and update the region and Regex pattern ID with the one created in the previous step
+
+        <details><summary>Nested Statement with Request Hygiene Solution</summary>
+        <p>
+
+            {
+            	"Name": "matchCSRF",
+            	"Priority": 4,
+            	"Action": {
+            		"Block": {}
+            	},
+            	"VisibilityConfig": {
+            		"SampledRequestsEnabled": true,
+            		"CloudWatchMetricsEnabled": true,
+            		"MetricName": "matchCSRF"
+            	},
+            	"Statement": {
+            		"AndStatement": {
+            			"Statements": [{
+            					"NotStatement": {
+            						"Statement": {
+            							"RegexPatternSetReferenceStatement": {
+            								"ARN": "arn:aws:wafv2:YOUR_REGION:621444544941:regional/regexpatternset/csrf/YOUR_REGEX_PATTERN_ID",
+            								"FieldToMatch": {
+            									"SingleHeader": {
+            										"Name": "x-csrf-token"
+            									}
+            								},
+            								"TextTransformations": [{
+            									"Priority": 0,
+            									"Type": "URL_DECODE"
+            								}]
+            							}
+            						}
+            					}
+            				},
+            				{
+            					"OrStatement": {
+            						"Statements": [{
+            								"ByteMatchStatement": {
+            									"SearchString": "/form.php",
+            									"FieldToMatch": {
+            										"UriPath": {}
+            									},
+            									"TextTransformations": [{
+            										"Priority": 0,
+            										"Type": "NONE"
+            									}],
+            									"PositionalConstraint": "STARTS_WITH"
+            								}
+            							},
+            							{
+            								"ByteMatchStatement": {
+            									"SearchString": "/form.php",
+            									"FieldToMatch": {
+            										"UriPath": {}
+            									},
+            									"TextTransformations": [{
+            										"Priority": 0,
+            										"Type": "NONE"
+            									}],
+            									"PositionalConstraint": "EXACTLY"
+            								}
+            							}
+            						]
+            					}
+            				}
+            			]
+            		}
+            	}
+            }
+
+        </p>
+        </details>
+
+    4. Click **Save rule**
+    5.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
 !!! Attention
     <p style="font-size:14px;">
@@ -224,15 +361,12 @@ Consider the following:
 Build rules that ensure the relevant HTTP request components used for input into paths do not contain known path traversal patterns.
 
 ??? info "Solution"
-    1.	create a **String and regex matching** _String match_ type condition named filterTraversal with 3 filters
-        1. uri, starts with, url_decode, _/include_
-        2. query_string, contains, url_decode, _../_
-        3. query_string, contains, url_decode, _://_
-    2.	create rule named matchTraversal
-        1. type regular
-        2. does match string condition: filterTraversal
-    3.	add rules to Web ACL
-    4.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
+    1.	Create a new rule named **matchTraversal** and for **If a request** choose **matches at least one of the statements (OR)**. Add conditions:
+        1. uri_path, starts with string, url_decode, _/include_
+        2. query_string, contains string, url_decode, _../_
+        3. query_string, contains string, url_decode, _://_
+        4. Click on **Add Rule** and then click **Save**
+    2.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
 !!! info "Note About Remaining Exercises"
     **The remaining exercises below are optional. You should proceed to the [Verify Phase](verify.md) and come back to the content below if time permits.**
@@ -245,21 +379,68 @@ Use the string and regex matching conditions along with geo match and IP address
 
 Consider the following:
 •	Does your web application have server-side include components in the public web path?
+
 •	Does your web application have components at exposed paths that are not used (or dependencies have such functions)?
+
 •	Do you have administrative, management, status or health check paths and components that aren’t meant for end user access?
 
 You should consider blocking access to such elements, or limiting access to known sources, either whitelisted IP addresses or geographic locations.
 
 ??? info "Solution"
-    1.	create **Geo match** condition named filterAffiliates with 1 filter
-        1.	add country US, and RO
-    2.	create **String and regex matching** _String match_ type condition named filterAdminUI with 1 filter
-        1.	uri, starts with, no transform, _/admin_
-    3.	create rule named matchAdminNotAffiliate
-        1.	type regular
-        2.	does match string condition: filterAdminUI
-        3.	does not match geo condition: filterAffiliates
-    4.	add rule to Web ACL
+    1.	Create a new rule and choose **Rule JSON editor**
+
+	    1. Paste the following JSON and update the region and Regex pattern ID with the one created in the previous step
+
+        <details><summary>Nested Statement with Limit Attack Footprint Solution</summary>
+        <p>
+
+            {
+            	"Name": "matchAdminNotAffiliate",
+            	"Priority": 2,
+            	"Action": {
+            		"Block": {}
+            	},
+            	"VisibilityConfig": {
+            		"SampledRequestsEnabled": true,
+            		"CloudWatchMetricsEnabled": true,
+            		"MetricName": "matchAdminNotAffiliate"
+            	},
+            	"Statement": {
+            		"AndStatement": {
+            			"Statements": [{
+            					"NotStatement": {
+            						"Statement": {
+            							"GeoMatchStatement": {
+            								"CountryCodes": [
+            									"US",
+            									"RO"
+            								]
+            							}
+            						}
+            					}
+            				},
+            				{
+            					"ByteMatchStatement": {
+            						"FieldToMatch": {
+            							"UriPath": {}
+            						},
+            						"PositionalConstraint": "STARTS_WITH",
+            						"SearchString": "/admin",
+            						"TextTransformations": [{
+            							"Type": "NONE",
+            							"Priority": 0
+            						}]
+            					}
+            				}
+            			]
+            		}
+            	}
+            }
+
+        </p>
+        </details>
+
+    2. Click on **Add Rule** and then click **Save**
 
 ### 5. Detect & Mitigate Anomalies (Optional)
 
@@ -274,13 +455,13 @@ What constitutes an anomaly in regards to your web application? A few common ano
 Do you have mechanisms in place to detect such patterns? If so, can you build rules to mitigate them?
 
 ??? info "Solution"
-    1.	create **String and regex match** condition named filterLoginProcessor with 1 filter
-        1.	uri, starts with, no transform, _/login.php_
-    2.	create rule named matchRateLogin
-        1.	type rate-based, 2000
-        2.	does match string condition: filterLoginProcessor
-        3.	does match string condition: filterPOSTMethod
-    3.	add rules to Web ACL
+    1.	Create a new rule named **matchRateLogin** of type **Rate-based rule**
+        1. **Rate limit** 1000
+        2. choose **Only consider requests that match the criteria in a rule statement**
+        3. choose **If a request** choose **matches at least one of the statements (OR)**. Add conditions:
+            1. uri_path, starts with string, _/login.php_
+            2. http_method, exactly matches string, _POST_
+        4. Click on **Add Rule** and then click **Save**
 
 ### 6. Reputation Lists, Nuisance Requests (Optional)
 
@@ -296,10 +477,10 @@ Build blacklists of such actors using the relevant conditions and set up rules t
 Reputation lists can also be maintained by third parties. The AWS WAF Security Automations allow you to implement IP-based reputation lists.
 
 ??? info "Solution"
-    1.	edit the IP addresses condition named WafIpBlackList
+    1.	edit the **IP set** **SampleIPSetV4**
         1. add a test IP address _You can obtain your current IP at <a href="https://ifconfig.co/" target="_blank">Ifconfig.co</a> The entry should follow CIDR notation. i.e. 10.10.10.10/32 for a single host._
-    2.	create a **String and regex matching** _String match_ condition named filterNoPath with 1 filter
-        1.	uri, starts with, no transform, _/phpmyadmin_
+    2.	Create a new rule and choose **Rule JSON editor**
+        1.	uri_path, starts with, no transform, _/phpmyadmin_
     3.	Use the concepts you learned in the previous exercises to add the _filterNoPath_ condition to your Web ACL.
 
 ---

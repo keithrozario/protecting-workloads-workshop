@@ -572,43 +572,64 @@ Resources:
         WillReplace: 'true'
 
 ## Deploy a WAF WebACL, Sample Rule, Sample IPSet
-  wafBlacklistIpSet:
-    Type: AWS::WAFRegional::IPSet
+  wafBlacklistIpSetV4:
+    Type: 'AWS::WAFv2::IPSet'
     Properties:
-      Name: WafIpBlacklist
-      IPSetDescriptors:
-        - Type: IPV4
-          Value: 127.0.0.0/8
-        - Type: IPV6
-          Value: ::1/128
-  wafBlacklistIpRule:
-    Type: AWS::WAFRegional::Rule
+      Description: SampleIPSetV4
+      Name: SampleIPSetV4
+      Scope: REGIONAL
+      IPAddressVersion: IPV4
+      Addresses:
+        - 127.0.0.0/8
+  wafBlacklistIpSetV6:
+    Type: 'AWS::WAFv2::IPSet'
     Properties:
-      MetricName: WafIpBlacklist
-      Name: WafIpBlacklist
-      Predicates:
-        - Type: IPMatch
-          Negated: false
-          DataId: !Ref wafBlacklistIpSet
+      Description: SampleIPSetV6
+      Name: SampleIPSetV6
+      Scope: REGIONAL
+      IPAddressVersion: IPV6
+      Addresses:
+        - ::1/128
   wafACL:
-    Type: AWS::WAFRegional::WebACL
+    Type: AWS::WAFv2::WebACL
     Properties:
-      MetricName: PWWLabWAF
       Name: PWWLabWAF
+      Scope: REGIONAL
       DefaultAction:
-        Type: ALLOW
+        Allow: {}
+      VisibilityConfig:
+        SampledRequestsEnabled: true
+        CloudWatchMetricsEnabled: true
+        MetricName: ExampleWebACLMetric
       Rules:
-        - Action:
-            Type: BLOCK
-          Priority: 10
-          RuleId: !Ref wafBlacklistIpRule
+        - Name: WafIpBlacklist
+          Priority: 0
+          Action:
+            Block: {}
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: BlockIPMetric
+          Statement:
+            OrStatement:
+              Statements:
+              - IPSetReferenceStatement: 
+                  Arn: !GetAtt wafBlacklistIpSetV4.Arn
+              - IPSetReferenceStatement:
+                  Arn: !GetAtt wafBlacklistIpSetV6.Arn
 
 ## Associate WAF ACL with load balancer
   wafALBAssociation:
-    Type: AWS::WAFRegional::WebACLAssociation
+    Type: AWS::WAFv2::WebACLAssociation
     Properties:
-      ResourceArn: !Ref Alb
-      WebACLId: !Ref wafACL
+      ResourceArn: 
+        !Sub 
+          - 'arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/${TargetALB}'
+          - TargetALB: !GetAtt Alb.LoadBalancerFullName
+      WebACLArn: !GetAtt wafACL.Arn
+
+# arn:aws:elasticloadbalancing:us-west-2:621444544941:loadbalancer/app/pww-upd-Alb-1KFF8XT7FM4UR/8b8d1e779bbe9f09
+
 
 ##  Configure the EC2 IAM role along with supporting resources
   EC2InstanceRole:
