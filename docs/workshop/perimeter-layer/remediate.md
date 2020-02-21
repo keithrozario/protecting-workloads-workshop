@@ -5,7 +5,7 @@ You are now going to design and implement an AWS WAF ruleset to help mitigate th
 
 1. Identify the WAF ACL for your site
 2. AWS WAF Rule design and considerations
-3. Console Walkthrough - Creating a WAF Condition and Rule
+3. Console Walkthrough - Creating a Rule
 4. WAF Rule Creation and Solutions
 
 !!! Attention
@@ -59,17 +59,17 @@ Every rule in AWS WAF has a single top-level rule statement, which can contain o
 After you create your web ACL, you can associate it with one or more AWS resources. The resource types that you can protect using AWS WAF web ACLs are Amazon CloudFront distributions, Amazon API Gateway APIs, and Application Load Balancers.
 
 !!! info "Note About This Section"
-    **In order to illustrate the process of creating WAF conditions and rules, we will walk through the creation of the first rule in your WAF ACL.** The complete list of threats and solutions is available in the <a href="./#waf-rule-creation-and-solutions">WAF Rule Creation and Solutions</a> section.
+    **In order to illustrate the process of creating WAF rules, we will walk through the creation of the first rule in your WAF ACL.** The complete list of threats and solutions is available in the <a href="./#waf-rule-creation-and-solutions">WAF Rule Creation and Solutions</a> section.
 
 ###Rule Design Considerations:
 
-To create a rule, you have to create the relevant match conditions first. This process requires planning for effective rule building. Use the following guiding questions:
+Use the following guiding questions when planning WAF rules:
 
 1.	What is the intended purpose of the rule?
 2.	What HTTP request components apply to the purpose of the rule?
-3.	Do you already have conditions targeting those request components that you can reuse? Is that desirable?
+3.	Do you already have rules targeting those request components that you can expand? Is that desirable?
 4.	How can you define the purpose of the rule in a Boolean logic expression?
-5.	What conditions do you need to create to implement the logic?
+5.	Will the rule require nested statements under logical AND or OR rule statements?
 6.	Are any transformations relevant to my input content type?
 
 ####Sample Rule purpose:
@@ -85,7 +85,7 @@ To create a rule, you have to create the relevant match conditions first. This p
 
 - If **Query String contains suspected SQL Injection** then **block**
 
-####Sample Rule - Conditions to implement:
+####Sample Rule - Statement to implement:
 
 - **Contains SQL injection attacks Match type** targeting the request **Query string**
 
@@ -97,7 +97,7 @@ To create a rule, you have to create the relevant match conditions first. This p
 
 - Rule with 1 predicate Contains SQL injection attacks Match type
 
-##Console Walkthrough - Creating a Condition and Rule
+##Console Walkthrough - Creating a Rule
 
 1. In the AWS WAF console, create a SQL injection rule by clicking the Web ACL, **Add rules**, **Add my own rules and rule groups**
 
@@ -123,7 +123,7 @@ In this phase, we will have a set of 6 exercises walking you through the process
 
 ### 1. SQL Injection & Cross Site Scripting Mitigation
 
-Use the SQL injection, cross-site scripting, as well as string and regex matching conditions to build rules that mitigate injection attacks and cross site scripting attacks.
+Use the SQL injection, cross-site scripting, as well as string and regex matching to build rules that mitigate injection attacks and cross site scripting attacks.
 
 Consider the following:
 
@@ -134,8 +134,8 @@ Consider the following:
 How do the requirements derived from the above questions affect your solution?
 
 ??? info "SQL Injection Solution"
-    1.	Update the **matchSQLi** rule with 2 additional conditions
-        1. Select the **matchSQLi** rule and click **Edit** (_You should have created this rule in <a href="./#console-walkthrough-creating-a-condition-and-rule">the walk through above</a>_)
+    1.	Update the **matchSQLi** rule with 2 additional statements
+        1. Select the **matchSQLi** rule and click **Edit** (_You should have created this rule in <a href="./#console-walkthrough-creating-a-rule">the walk through above</a>_)
         2. Change **If a request** to **matches at least one of the statements (OR)**
         3. Click **Add another statement**: body, contains sql injection attacks, html entity decode and URL decode
         4. Click **Add another statement**: header, cookie, contains sql injection attacks, url decode
@@ -146,16 +146,16 @@ How do the requirements derived from the above questions affect your solution?
     On the console, you don't see these represented as rule statements, but every web ACL has a JSON format representation. In there, you see these special types of rule statements. For rules of any complexity, managing your web ACL using the JSON editor is the easiest way to go. You can retrieve the complete configuration for a web ACL in JSON format, modify it as you need, and then provide it through the console, API, or CLI. AWS WAF supports nesting of rule statements. To combine rule statement results, you nest the statements under logical AND or OR rule statements. The visual editor on the console supports one level of rule statement nesting, which works for many needs. To nest more levels, you can edit the JSON representation of the rule on the console.
 
 ??? info "Cross Site Scripting Solution"
-    1.	Create a new rule named **matchXSS** and for **If a request** choose **matches at least one of the statements (OR)**. Add conditions:
+    1.	Create a new rule named **matchXSS** and for **If a request** choose **matches at least one of the statements (OR)**. Add statements:
         1. all query parameters, contains xss injection attacks, url decode
         2. body, contains xss injection attacks, html enity decode
         3. body, contains xss injection attacks, url decode
         4. header, cookie (_type manually_), contains xss injection attacks, url decode
         5. Click on **Add Rule** and then click **Save**
     2.	Click the **Rule JSON editor** and note the structure and syntax of the rule logic. 
-    3. Add an exception condition for the XSS rule to allow access to _/reportBuilder/Editor.aspx_. _Note that we are using the JSON editor here due to the nested logic requred fo rthe exception._
+    3. Add an exception statement for the XSS rule to allow access to _/reportBuilder/Editor.aspx_. _Note that we are using the JSON editor here due to the nested logic requred fo rthe exception._
 
-	    1. Clear the existing editor content for the matchXSS rule and paste the following JSON
+	    1. After reviewing it, clear the existing editor content for the matchXSS rule and paste the following JSON
 
         <details><summary>Nested Statement with XSS Exception Solution</summary>
         <p>
@@ -248,7 +248,7 @@ How do the requirements derived from the above questions affect your solution?
 
 ### 2. Enforce Request Hygiene
 
-Use the string and regex matching, size constraints and IP address match conditions to build rules that block non-conforming or low value HTTP requests.
+Use the string and regex matching, size constraints and IP address matching to build rules that block non-conforming or low value HTTP requests.
 
 Consider the following:
 
@@ -349,7 +349,7 @@ Build rules that ensure the requests your application ends up processing are val
 
 ### 3. Mitigate File Inclusion & Path Traversal
 
-Use the string and regex matching conditions to build rules that block specific patterns indicative of unwanted path traversal or file inclusion.
+Use the string and regex matching to build rules that block specific patterns indicative of unwanted path traversal or file inclusion.
 
 Consider the following:
 
@@ -361,7 +361,7 @@ Consider the following:
 Build rules that ensure the relevant HTTP request components used for input into paths do not contain known path traversal patterns.
 
 ??? info "Solution"
-    1.	Create a new rule named **matchTraversal** and for **If a request** choose **matches at least one of the statements (OR)**. Add conditions:
+    1.	Create a new rule named **matchTraversal** and for **If a request** choose **matches at least one of the statements (OR)**. Add statements:
         1. uri_path, starts with string, url_decode, _/include_
         2. query_string, contains string, url_decode, _../_
         3. query_string, contains string, url_decode, _://_
@@ -375,7 +375,7 @@ Build rules that ensure the relevant HTTP request components used for input into
 
 ### 4. Limit Attack Footprint (Optional)
 
-Use the string and regex matching conditions along with geo match and IP address match conditions to build rules that limit the attack footprint against the exposed components of your application.
+Use the string and regex matching along with geo match and IP address matching to build rules that limit the attack footprint against the exposed components of your application.
 
 Consider the following:
 •	Does your web application have server-side include components in the public web path?
@@ -458,7 +458,7 @@ Do you have mechanisms in place to detect such patterns? If so, can you build ru
     1.	Create a new rule named **matchRateLogin** of type **Rate-based rule**
         1. **Rate limit** 1000
         2. choose **Only consider requests that match the criteria in a rule statement**
-        3. choose **If a request** choose **matches at least one of the statements (OR)**. Add conditions:
+        3. choose **If a request** choose **matches at least one of the statements (OR)**. Add statements:
             1. uri_path, starts with string, _/login.php_
             2. http_method, exactly matches string, _POST_
         4. Click on **Add Rule** and then click **Save**
@@ -472,7 +472,7 @@ Reputation lists (whitelists or blacklists) are a good way to filter and stop se
 - reuse of hijacked authorization or session tokens,
 - attempting to make requests to paths that clearly do not exist in your application but are well known vulnerable software packages (probing)
 
-Build blacklists of such actors using the relevant conditions and set up rules to match and block them. An example IP-based blacklist already exists in your sandbox environment.
+Build blacklists of such actors using the relevant statements and set up rules to match and block them. An example IP-based blacklist already exists in your sandbox environment.
 
 Reputation lists can also be maintained by third parties. The AWS WAF Security Automations allow you to implement IP-based reputation lists.
 
@@ -481,7 +481,7 @@ Reputation lists can also be maintained by third parties. The AWS WAF Security A
         1. add a test IP address _You can obtain your current IP at <a href="https://ifconfig.co/" target="_blank">Ifconfig.co</a> The entry should follow CIDR notation. i.e. 10.10.10.10/32 for a single host._
     2.	Create a new rule and choose **Rule JSON editor**
         1.	uri_path, starts with, no transform, _/phpmyadmin_
-    3.	Use the concepts you learned in the previous exercises to add the _filterNoPath_ condition to your Web ACL.
+    3.	Use the concepts you learned in the previous exercises to add the _filterNoPath_ statement to your Web ACL.
 
 ---
 
