@@ -67,7 +67,7 @@ Use the following guiding questions when planning WAF rules:
 
 1.	What is the intended purpose of the rule?
 2.	What HTTP request components apply to the purpose of the rule?
-3.	Do you already have rules targeting those request components that you can expand? Is that desirable?
+3.	Do you already have rules or rule groups targeting those request components that you can expand? Is that desirable?
 4.	How can you define the purpose of the rule in a Boolean logic expression?
 5.	Will the rule require nested statements under logical AND or OR rule statements?
 6.	Are any transformations relevant to my input content type?
