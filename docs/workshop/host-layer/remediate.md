@@ -18,7 +18,7 @@ In this section you will do the following tasks:
 2.  You will now see a list of default patch baselines that are used to patch each operating system supported by Patch Manager.   The default patch baseline only patches major security issues.  You are going to crate a new Amazon Linux 2 patch baseline that will patch more things and make this new patch baseline the default.  Click **Create patch baseline**.
 
 
-3.  In the *Name* field, enter a name to give the new baseline such as **pww**.  In the *Operating system* field, select **Amazon Linux 2**.  In the *Approval rules* section, check the box under *Include non-security updates*.  IMPORTANT NOTE:  Depending on the size of the screen, the box may not align with the title *Include non-security updates*.  See the figure below.
+3.  In the *Name* field, enter a name to give the new baseline such as **pww**.  In the *Operating system* field, select **Amazon Linux 2**.  Select **All** for the Product, Classification, and Severity dropdown menus.  In the *Approval rules* section, check the box under *Include non-security updates*.  IMPORTANT NOTE:  Depending on the size of the screen, the box may not align with the title *Include non-security updates*.  See the figure below.
 
     ![approval-rule](./images/remediate-pm-approval-rule.png)
 
