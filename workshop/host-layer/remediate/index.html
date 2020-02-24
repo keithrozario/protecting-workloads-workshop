@@ -672,7 +672,7 @@ You will use tags to select the instances as well.</p>
 <p>You will now see a list of default patch baselines that are used to patch each operating system supported by Patch Manager.   The default patch baseline only patches major security issues.  You are going to crate a new Amazon Linux 2 patch baseline that will patch more things and make this new patch baseline the default.  Click <strong>Create patch baseline</strong>.</p>
 </li>
 <li>
-<p>In the <em>Name</em> field, enter a name to give the new baseline such as <strong>pww</strong>.  In the <em>Operating system</em> field, select <strong>Amazon Linux 2</strong>.  In the <em>Approval rules</em> section, check the box under <em>Include non-security updates</em>.  IMPORTANT NOTE:  Depending on the size of the screen, the box may not align with the title <em>Include non-security updates</em>.  See the figure below.</p>
+<p>In the <em>Name</em> field, enter a name to give the new baseline such as <strong>pww</strong>.  In the <em>Operating system</em> field, select <strong>Amazon Linux 2</strong>.  Select <strong>All</strong> for the Product, Classification, and Severity dropdown menus.  In the <em>Approval rules</em> section, check the box under <em>Include non-security updates</em>.  IMPORTANT NOTE:  Depending on the size of the screen, the box may not align with the title <em>Include non-security updates</em>.  See the figure below.</p>
 <p><img alt="approval-rule" src="../images/remediate-pm-approval-rule.png" /></p>
 </li>
 <li>
@@ -684,7 +684,7 @@ You will use tags to select the instances as well.</p>
 <p><img alt="default-baseline" src="../images/remediate-pm-default-baseline-yes.png" /></p>
 </li>
 <li>
-<p>Click <strong>Configure patching</strong>. In the <em>Configure patching</em> screen, go to the <em>Instances to patch</em> section and click the <strong>Enter instance tags</strong> radio button.  In the <em>Instance tags</em> field, enter <em>aws:cloudformation:stack-name</em> into the <em>Tag key</em> field.  In the <em>Tag value</em> field, enter the stack name that you created earlier (pww, following the example in this documentation).  Click <strong>Add</strong>.</p>
+<p>Click <strong>Configure patching</strong>. In the <em>Configure patching</em> screen, go to the <em>Instances to patch</em> section and click the <strong>Enter instance tags</strong> radio button.  In the <em>Instance tags</em> field, enter <em>aws:cloudformation:stack-name</em> into the <em>Tag key</em> field.  In the <em>Tag value</em> field, enter the stack name that you created earlier.  If you are running this workshop on your own and following this documentation, you would use <strong>pww</strong>.  If you are at an AWS event using Event Engine, the stack name would likely start with <em>mod-</em> and be followed by some numbers.   Click <strong>Add</strong>.</p>
 </li>
 <li>
 <p>In the <em>Patching schedule</em> section, click the <em>Skip scheduling and patch instances now</em> radio button.</p>

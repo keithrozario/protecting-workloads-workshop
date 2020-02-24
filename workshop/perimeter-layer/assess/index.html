@@ -742,7 +742,7 @@ You are now going to assess the posture of the site and then add an AWS WAF Web 
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p><p style="font-size:14px;">
-  Please insure you are <strong>using the AWS WAF Classic</strong> console experience for this workshop.
+  Please insure you are <strong>using the improved AWS WAF console and API experience</strong> for this workshop.
 </p></p>
 </div>
 <h2 id="website-scanning-environment-and-tools">Website Scanning Environment and Tools</h2>
@@ -781,11 +781,15 @@ You are now going to assess the posture of the site and then add an AWS WAF Web 
 </ul>
 <p>The logic in the scanner script color codes the response as follows:</p>
 <ul>
-<li><strong>Green</strong>: 403 - Forbidden (<em>Except for canary GET and POST tests.</em>)</li>
-<li><strong>Red</strong>: 200 - OK</li>
-<li><strong>Blue</strong>: 404 - Not Found</li>
-<li><strong>Yellow</strong>: 500 - Internal Server Error</li>
+<li><span style="color:green"><strong>Green</strong></span>: 403 - Forbidden (<em>Except for canary GET and POST tests.</em>)</li>
+<li><span style="color:red"><strong>Red</strong></span>: 200 - OK</li>
+<li><span style="color:blue"><strong>Blue</strong></span>: 404 - Not Found</li>
+<li><span style="color:#CCCC00"><strong>Yellow</strong></span>: 500 - Internal Server Error</li>
 </ul>
+<div class="admonition info">
+<p class="admonition-title">About Scanner Tests and Colors</p>
+<p>The color coding of the tests is provided to help to quickly assess the behavior of your WAF rules againsty their intended behavior. The goal is to acheive green color responses for all the tests. The purpose of the canary GET and POST requests are to ensure you have not unintentionally blocked legitimate traffic to your test site. These two tests should always return a <em>200 - OK</em> response.</p>
+</div>
 <p>What are the results of running the scanner script? Were the simulated malicious requests blocked? As you can see by running the script there are several vulnerabilities that need to be addressed. In the remediate phase you will configure an AWS WAF Web ACL to block these requests. When AWS WAF blocks a web request based on the conditions that you specify, it returns HTTP status code 403 (Forbidden). For a full view of the request and response information, you can paste the <strong>Request</strong> command directly into the console and add the --debug argument.</p>
 <div class="admonition info">
 <p class="admonition-title">Note about Testing Tool</p>

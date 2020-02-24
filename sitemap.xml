@@ -2,57 +2,57 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/getting-started/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/build/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/perimeter-layer/assess/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/perimeter-layer/remediate/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/perimeter-layer/verify/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/host-layer/assess/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/host-layer/remediate/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/host-layer/verify/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://protecting-workloads.awssecworkshops.com/workshop/cleanup/</loc>
-     <lastmod>2019-12-20</lastmod>
+     <lastmod>2020-02-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>
