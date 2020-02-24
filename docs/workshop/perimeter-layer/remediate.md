@@ -26,7 +26,7 @@ Make sure you select the appropriate AWS Region when working in the AWS Manageme
 Once selected, you will be redirected to the AWS WAF & AWS Shield service console. You may see an initial landing page at first. Choose Go to AWS WAF:
 
 ![WAF Home](./images/waf-home.png)
-3. In the side bar menu on the left, pick the Web ACLs option under the AWS WAF heading. If the list of Web ACLs appears empty select the correct AWS Region as indicated on your credentials card in the Filter dropdown. If you are sharing the same account with other participants you can identify your WAF ACL by the Id in the stack outputs.
+3.  In the side bar menu on the left, pick the Web ACLs option under the AWS WAF heading. If the list of Web ACLs appears empty select the correct AWS Region as indicated on your credentials card in the Filter dropdown **IN THE Web ACLs area of the window**. If you are sharing the same account with other participants you can identify your WAF ACL by the Id in the stack outputs.
 
 ![WAF ACL Home](./images/waf-acl-home.png)
 4. Click on the WAF Web ACL Name to select the existing Web ACL. Once the detail pane is loaded on the left of your screen, you will see three tabs: Requests, Rules, and Logging. Toggle to Rules:
@@ -35,7 +35,7 @@ Once selected, you will be redirected to the AWS WAF & AWS Shield service consol
 Validate that you are able to see a pre-existing rule, configured to block requests, and that your Web ACL is associated with an Application load balancer resource. You can drill down further into the properties of the existing rule, by selecting the rule name and clicking **Edit**. This rule references IP sets for the loopback/localhost IP addresses (127.0.0.0/8, ::1/128).
 
 !!! info "Viewing and Logging Requests"
-    _In the Requests tab, you can view a <a href="https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-testing.html#web-acl-testing-view-sample" target="_blank">sample of the requests</a> that have been inspected by the WAF. For each sampled request, you can view detailed data about the request, such as the originating IP address and the headers included in the request. You also can view which rule the request matched, and whether the rule is configured to allow or block requests. You can refer to the sampled requests throughout this exercise to monitor activity and look for suspicious activity. Although not used in this workshop, in the Logging tab, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/logging.html" target="_blank">you can enable full logging</a> to get detailed information about traffic that is analyzed by your web ACL._
+    _In the **Overview** tab for your Web ACL, you can view a <a href="https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-testing.html#web-acl-testing-view-sample" target="_blank">sample of the requests</a> that have been inspected by the WAF. For each sampled request, you can view detailed data about the request, such as the originating IP address and the headers included in the request. You also can view which rule the request matched, and whether the rule is configured to allow or block requests. You can refer to the sampled requests throughout this exercise to monitor activity and look for suspicious activity. Although not used in this workshop, in the **Logging and metrics** tab, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/logging.html" target="_blank">you can enable full logging</a> to get detailed information about traffic that is analyzed by your web ACL._
 
 ##AWS WAF Rule Design and Considerations
 
@@ -143,7 +143,7 @@ How do the requirements derived from the above questions affect your solution?
     3.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
 !!! info "Rule JSON editor"
-    On the console, you don't see these represented as rule statements, but every web ACL has a JSON format representation. In there, you see these special types of rule statements. For rules of any complexity, managing your web ACL using the JSON editor is the easiest way to go. You can retrieve the complete configuration for a web ACL in JSON format, modify it as you need, and then provide it through the console, API, or CLI. AWS WAF supports nesting of rule statements. To combine rule statement results, you nest the statements under logical AND or OR rule statements. The visual editor on the console supports one level of rule statement nesting, which works for many needs. To nest more levels, you can edit the JSON representation of the rule on the console.
+    Thus far you have used the Visual Rule Editor to create WAF Rules but every web ACL also has a JSON format representation. In there, you see these special types of rule statements. For rules of any complexity, managing your web ACL using the JSON editor is the easiest way to go. You can retrieve the complete configuration for a web ACL in JSON format, modify it as you need, and then provide it through the console, API, or CLI. AWS WAF supports nesting of rule statements. To combine rule statement results, you nest the statements under logical AND or OR rule statements. The visual editor on the console supports one level of rule statement nesting, which works for many needs. To nest more levels, you can edit the JSON representation of the rule on the console.
 
 ??? info "Cross Site Scripting Solution"
     1.	Create a new rule named **matchXSS** and for **If a request** choose **matches at least one of the statements (OR)**. Add statements:
@@ -162,7 +162,7 @@ How do the requirements derived from the above questions affect your solution?
         
             {
                 "Name": "matchXSS",
-                "Priority": 0,
+                "Priority": 2,
                 "Action": {
                     "Block": {}
                 },
@@ -261,6 +261,7 @@ Build rules that ensure the requests your application ends up processing are val
 ??? info "Solution"
     1.	In the left pane, choose **Regex pattern sets**, **Create regex pattern set** 
         1.	**Regex pattern set name** _csrf_, **Regular expressions** _^[0-9a-f]{40}$_
+            1. Copy the Regex pattern set ID into a scratch file to refer to it later.
 
     2.	Create a new rule and choose **Rule JSON editor**
 
@@ -271,7 +272,7 @@ Build rules that ensure the requests your application ends up processing are val
 
             {
             	"Name": "matchCSRF",
-            	"Priority": 4,
+            	"Priority": 3,
             	"Action": {
             		"Block": {}
             	},
@@ -375,7 +376,7 @@ Build rules that ensure the relevant HTTP request components used for input into
 
 ### 4. Limit Attack Footprint (Optional)
 
-Use the string and regex matching along with geo match and IP address matching to build rules that limit the attack footprint against the exposed components of your application.
+Use geo matching to build rules that limit the attack footprint against the exposed components of your application.
 
 Consider the following:
 •	Does your web application have server-side include components in the public web path?
@@ -396,7 +397,7 @@ You should consider blocking access to such elements, or limiting access to know
 
             {
             	"Name": "matchAdminNotAffiliate",
-            	"Priority": 2,
+            	"Priority": 4,
             	"Action": {
             		"Block": {}
             	},
@@ -461,6 +462,7 @@ Do you have mechanisms in place to detect such patterns? If so, can you build ru
         3. choose **If a request** choose **matches at least one of the statements (OR)**. Add statements:
             1. uri_path, starts with string, _/login.php_
             2. http_method, exactly matches string, _POST_
+            3. text transformation, _None_
         4. Click on **Add Rule** and then click **Save**
 
 ### 6. Reputation Lists, Nuisance Requests (Optional)
@@ -479,7 +481,7 @@ Reputation lists can also be maintained by third parties. The AWS WAF Security A
 ??? info "Solution"
     1.	edit the **IP set** **SampleIPSetV4**
         1. add a test IP address _You can obtain your current IP at <a href="https://ifconfig.co/" target="_blank">Ifconfig.co</a> The entry should follow CIDR notation. i.e. 10.10.10.10/32 for a single host._
-    2.	Create a new rule and choose **Rule JSON editor**
+    2.	Create a new rule named **matchRepNuisance**
         1.	uri_path, starts with, no transform, _/phpmyadmin_
     3.	Use the concepts you learned in the previous exercises to add the _filterNoPath_ statement to your Web ACL.
 

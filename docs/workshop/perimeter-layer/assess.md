@@ -69,10 +69,13 @@ The scanner script will run each of the tests above and report back the followin
 
 The logic in the scanner script color codes the response as follows:
 
-- __Green__: 403 - Forbidden (_Except for canary GET and POST tests._)
-- __Red__: 200 - OK
-- __Blue__: 404 - Not Found
-- __Yellow__: 500 - Internal Server Error
+- <span style="color:green">__Green__</span>: 403 - Forbidden (_Except for canary GET and POST tests._)
+- <span style="color:red">__Red__</span>: 200 - OK
+- <span style="color:blue">__Blue__</span>: 404 - Not Found
+- <span style="color:#CCCC00">__Yellow__</span>: 500 - Internal Server Error
+
+!!! info "About Scanner Tests and Colors"
+    The color coding of the tests is provided to help to quickly assess the behavior of your WAF rules againsty their intended behavior. The goal is to acheive green color responses for all the tests. The purpose of the canary GET and POST requests are to ensure you have not unintentionally blocked legitimate traffic to your test site. These two tests should always return a _200 - OK_ response.
 
 What are the results of running the scanner script? Were the simulated malicious requests blocked? As you can see by running the script there are several vulnerabilities that need to be addressed. In the remediate phase you will configure an AWS WAF Web ACL to block these requests. When AWS WAF blocks a web request based on the conditions that you specify, it returns HTTP status code 403 (Forbidden). For a full view of the request and response information, you can paste the **Request** command directly into the console and add the --debug argument.
 
