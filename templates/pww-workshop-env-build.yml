@@ -1361,6 +1361,9 @@ Outputs:
   wafWebACL:
     Description: WAF Web ACL associated with test website
     Value: !Ref wafACL
+  AMIId:
+    Description: AMI Id
+    Value: !GetAtt AMIInfo.Id
   RedTeamHostSession:
     Description: Start interactive shell on Red Team Host
     Value: !Join ['', ['https://console.aws.amazon.com/systems-manager/session-manager/', !Ref RedTeamHost, '?', !Ref 'AWS::Region']]
