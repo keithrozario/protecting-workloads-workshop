@@ -628,9 +628,6 @@ Resources:
           - TargetALB: !GetAtt Alb.LoadBalancerFullName
       WebACLArn: !GetAtt wafACL.Arn
 
-# arn:aws:elasticloadbalancing:us-west-2:621444544941:loadbalancer/app/pww-upd-Alb-1KFF8XT7FM4UR/8b8d1e779bbe9f09
-
-
 ##  Configure the EC2 IAM role along with supporting resources
   EC2InstanceRole:
     Type: AWS::IAM::Role

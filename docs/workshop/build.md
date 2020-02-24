@@ -13,7 +13,7 @@
 	5. Make sure you are in the correct region.
 	6. Go to the CloudFormation console.
 	7. Click **[here](../perimeter-layer/assess/)** to proceed to the Assess Phase of the Perimeter Layer.
-	8. Optionally download the [Workshop Companion Guide](https://github.com/aws-samples/protecting-workloads-workshop/raw/master/artifacts/pww-companion-guide-v1.pdf).
+	8. Optionally download the [Workshop Companion Guide](https://github.com/aws-samples/protecting-workloads-workshop/raw/master/artifacts/pww-companion-guide-v2.pdf).
 
 ---
  

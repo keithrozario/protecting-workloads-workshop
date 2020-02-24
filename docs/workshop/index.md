@@ -15,7 +15,7 @@ Welcome to Widgets LLC! You have just joined the team and your first task is to 
 * **CAF Components**: Preventive
 
 !!! info "Before you Begin"
-    __Please review the architecture diagram below and [the getting started notes](./getting-started.md) before proceeding. Optionally download the [Workshop Companion Guide](https://github.com/aws-samples/protecting-workloads-workshop/raw/master/artifacts/pww-companion-guide-v1.pdf).__
+    __Please review the architecture diagram below and [the getting started notes](./getting-started.md) before proceeding. Optionally download the [Workshop Companion Guide](https://github.com/aws-samples/protecting-workloads-workshop/raw/master/artifacts/pww-companion-guide-v2.pdf).__
 
 ## Workshop Architecture
 
