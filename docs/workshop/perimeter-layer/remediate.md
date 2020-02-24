@@ -264,7 +264,7 @@ Build rules that ensure the requests your application ends up processing are val
 
     2.	Create a new rule and choose **Rule JSON editor**
 
-	    1. Paste the following JSON and update the region and Regex pattern ID with the one created in the previous step
+	    1. Paste the following JSON and **update the region and Regex pattern ID** with the one created in the previous step
 
         <details><summary>Nested Statement with Request Hygiene Solution</summary>
         <p>
