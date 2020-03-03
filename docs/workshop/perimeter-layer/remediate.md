@@ -282,7 +282,7 @@ Build rules that ensure the requests your application ends up processing are val
 ??? info "Solution"
     1.	In the left pane, choose **Regex pattern sets**, **Create regex pattern set** 
         1.	**Regex pattern set name** _csrf_, **Regular expressions** _^[0-9a-f]{40}$_
-            1. Copy the Regex pattern set ID into a scratch file to refer to it later.
+            1. The Regex pattern above is a simple example that matahes the string length (40) and characters (0-9 or a-f). Copy the Regex pattern set ID into a scratch file to refer to it later.
             2. Note your AWS account Id and region and add them to the scratch file.
 
     2.	Create a new rule and choose **Rule JSON editor**
