@@ -10,7 +10,7 @@ You are now going to design and implement an AWS WAF ruleset to help mitigate th
 
 !!! Attention
     <p style="font-size:14px;">
-      Please insure you are **using the improved AWS WAF console and API experience** for this workshop.
+      Please ensure you are **using the improved AWS WAF console and API experience** for this workshop.
     </p>
 
 ## Identify the WAF ACL for your Site
@@ -26,7 +26,7 @@ Make sure you select the appropriate AWS Region when working in the AWS Manageme
 Once selected, you will be redirected to the AWS WAF & AWS Shield service console. You may see an initial landing page at first. Choose Go to AWS WAF:
 
 ![WAF Home](./images/waf-home.png)
-3.  In the side bar menu on the left, pick the Web ACLs option under the AWS WAF heading. If the list of Web ACLs appears empty select the correct AWS Region as indicated on your credentials card in the Filter dropdown **IN THE Web ACLs area of the window**. If you are sharing the same account with other participants you can identify your WAF ACL by the Id in the stack outputs.
+3.  In the side bar menu on the left, pick the Web ACLs option under the AWS WAF heading. If the list of Web ACLs appears empty select the correct AWS Region as indicated on your credentials card in the Filter dropdown **IN THE Web ACLs area of the window**. If you are sharing the same account with other participants you can identify your WAF ACL by the Id in the stack outputs in the region where the stack was launched.
 
 ![WAF ACL Home](./images/waf-acl-home.png)
 4. Click on the WAF Web ACL Name to select the existing Web ACL. Once the detail pane is loaded on the left of your screen, you will see three tabs: Requests, Rules, and Logging. Toggle to Rules:
@@ -246,7 +246,28 @@ How do the requirements derived from the above questions affect your solution?
     4. Click **Save rule**
     5.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
-### 2. Enforce Request Hygiene
+### 2. Mitigate File Inclusion & Path Traversal
+
+Use the string and regex matching to build rules that block specific patterns indicative of unwanted path traversal or file inclusion.
+
+Consider the following:
+
+- Can end users browse the directory structure of your web folders? Do you have directory indexes enabled?
+- Is your application (or any dependency components) use input parameters in filesystem or remote URL references? 
+- Do you adequately lock down access so input paths cannot be manipulated?
+- What considerations do you need to account for in regards to false positives (directory traversal signature patterns)?  
+
+Build rules that ensure the relevant HTTP request components used for input into paths do not contain known path traversal patterns.
+
+??? info "Solution"
+    1.	Create a new rule named **matchTraversal** and for **If a request** choose **matches at least one of the statements (OR)**. Add statements:
+        1. uri_path, starts with string, _/include_, url_decode 
+        2. query_string, contains string, _../_, url_decode
+        3. query_string, contains string, _://_, url_decode
+        4. Click on **Add Rule** and then click **Save**
+    2.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
+
+### 3. Enforce Request Hygiene
 
 Use the string and regex matching, size constraints and IP address matching to build rules that block non-conforming or low value HTTP requests.
 
@@ -262,10 +283,11 @@ Build rules that ensure the requests your application ends up processing are val
     1.	In the left pane, choose **Regex pattern sets**, **Create regex pattern set** 
         1.	**Regex pattern set name** _csrf_, **Regular expressions** _^[0-9a-f]{40}$_
             1. Copy the Regex pattern set ID into a scratch file to refer to it later.
+            2. Note your AWS account Id and region and add them to the scratch file.
 
     2.	Create a new rule and choose **Rule JSON editor**
 
-	    1. Paste the following JSON and **update the region and Regex pattern ID** with the one created in the previous step
+	    1. Paste the following JSON and **update the region, AWS account Id and Regex pattern ID** with the one created in the previous step
 
         <details><summary>Nested Statement with Request Hygiene Solution</summary>
         <p>
@@ -287,7 +309,7 @@ Build rules that ensure the requests your application ends up processing are val
             					"NotStatement": {
             						"Statement": {
             							"RegexPatternSetReferenceStatement": {
-            								"ARN": "arn:aws:wafv2:YOUR_REGION:621444544941:regional/regexpatternset/csrf/YOUR_REGEX_PATTERN_ID",
+            								"ARN": "arn:aws:wafv2:YOUR_REGION:ACCOUNT_ID:regional/regexpatternset/csrf/YOUR_REGEX_PATTERN_ID",
             								"FieldToMatch": {
             									"SingleHeader": {
             										"Name": "x-csrf-token"
@@ -347,27 +369,6 @@ Build rules that ensure the requests your application ends up processing are val
     <p style="font-size:14px;">
       **If you have 30 minutes or less remaining in the workshop, you should consider proceeding to the [Host Layer round](/workshop/host-layer/assess/).** There will be time during the Inspector Assessment run to continue the WAF excercises.
     </p>
-
-### 3. Mitigate File Inclusion & Path Traversal
-
-Use the string and regex matching to build rules that block specific patterns indicative of unwanted path traversal or file inclusion.
-
-Consider the following:
-
-- Can end users browse the directory structure of your web folders? Do you have directory indexes enabled?
-- Is your application (or any dependency components) use input parameters in filesystem or remote URL references? 
-- Do you adequately lock down access so input paths cannot be manipulated?
-- What considerations do you need to account for in regards to false positives (directory traversal signature patterns)?  
-
-Build rules that ensure the relevant HTTP request components used for input into paths do not contain known path traversal patterns.
-
-??? info "Solution"
-    1.	Create a new rule named **matchTraversal** and for **If a request** choose **matches at least one of the statements (OR)**. Add statements:
-        1. uri_path, starts with string, url_decode, _/include_
-        2. query_string, contains string, url_decode, _../_
-        3. query_string, contains string, url_decode, _://_
-        4. Click on **Add Rule** and then click **Save**
-    2.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
 !!! info "Note About Remaining Exercises"
     **The remaining exercises below are optional. You should proceed to the [Verify Phase](verify.md) and come back to the content below if time permits.**
