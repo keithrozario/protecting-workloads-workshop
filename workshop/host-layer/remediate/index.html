@@ -704,7 +704,7 @@ You will use tags to select the instances as well.</p>
 <p>Go to the AWS Systems Manager Console and click <strong>Run Command</strong> on the left menu.  If the patching is still running, you will see the entry in the <em>Commands</em> tab.  Wait for the command to finish.  Refresh the screen if necessary to update the display.  Once the command has finished, click on <strong>Command history</strong>.</p>
 </li>
 <li>
-<p>Look for the line containing the document name <strong>AWS-RunPatchBaseline</strong>.  That represents the Patch Manager activity.Your screen should look similar to the image below.</p>
+<p>Look for the line containing the document name <strong>AWS-RunPatchBaseline</strong>.  That represents the Patch Manager activity.Your screen should look similar to the image below. If the command status is <strong>Failed</strong>, click on the <strong>Command ID</strong> link, click <strong>Rerun</strong> to reapply the patch baseline and monitor the status.</p>
 <p><img alt="command-history" src="../images/remediate-command-history.png" /></p>
 </li>
 <li>
