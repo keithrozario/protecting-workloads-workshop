@@ -48,7 +48,7 @@ You are now going to examine the status of the patching operation by using AWS S
 
 1. Go to the AWS Systems Manager Console and click **Run Command** on the left menu.  If the patching is still running, you will see the entry in the *Commands* tab.  Wait for the command to finish.  Refresh the screen if necessary to update the display.  Once the command has finished, click on **Command history**.
 
-2. Look for the line containing the document name **AWS-RunPatchBaseline**.  That represents the Patch Manager activity.Your screen should look similar to the image below. If the command status is _Failed_, click on the **Command ID** link, click **Rerun** to reapply the patch baseline and monitor the status.
+2. Look for the line containing the document name **AWS-RunPatchBaseline**.  That represents the Patch Manager activity.Your screen should look similar to the image below. If the command status is **Failed**, click on the **Command ID** link, click **Rerun** to reapply the patch baseline and monitor the status.
 
     ![command-history](./images/remediate-command-history.png)
 
