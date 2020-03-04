@@ -68,7 +68,7 @@ Parameters:
   AMIPreviousVersionIndex:
     Description: Number of previous version of AMI to use [0=current AMI through 15]
     Type: Number
-    Default: 8
+    Default: 6
     MinValue: 0
     MaxValue: 15
 
