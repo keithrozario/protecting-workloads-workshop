@@ -443,14 +443,14 @@ Resources:
   AlbTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 10
+      HealthCheckIntervalSeconds: 30
       HealthCheckPath: /health.php
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       Port: 80
       Protocol: HTTP
-      UnhealthyThresholdCount: 2
+      UnhealthyThresholdCount: 10
       VpcId: !Ref vpc
       Tags:
         - Key: Name
@@ -558,7 +558,7 @@ Resources:
       - !Ref AlbTargetGroup
       DesiredCapacity: '2'
       HealthCheckType: ELB
-      HealthCheckGracePeriod: 120
+      HealthCheckGracePeriod: 240
       Tags:
        -
         Key: Name
