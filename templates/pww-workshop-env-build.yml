@@ -13,7 +13,7 @@ Description: WAF Workshop Demo
 ## Parameters
 Parameters:
   EC2InstanceSize:
-    Default: "t2.small"
+    Default: "t3.small"
     Description: Instance size for Web Servers.
     Type: String
     AllowedValues:
@@ -68,7 +68,7 @@ Parameters:
   AMIPreviousVersionIndex:
     Description: Number of previous version of AMI to use [0=current AMI through 15]
     Type: Number
-    Default: 6
+    Default: 3
     MinValue: 0
     MaxValue: 15
 
@@ -503,7 +503,7 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
-          #yum update -y
+          # yum update -y
           yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
           curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -
           amazon-linux-extras install -y php7.2
