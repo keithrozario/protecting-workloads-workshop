@@ -1085,15 +1085,14 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <details class="info"><summary>Cross Site Scripting Solution</summary><ol>
 <li>Create a new rule named <strong>matchXSS</strong> and for <strong>If a request</strong> choose <strong>matches at least one of the statements (OR)</strong>. Add statements:<ol>
 <li>all query parameters, contains xss injection attacks, url decode</li>
-<li>body, contains xss injection attacks, html enity decode</li>
-<li>body, contains xss injection attacks, url decode</li>
+<li>body, contains xss injection attacks, html enity decode and url decode</li>
 <li>header, cookie (<em>type manually</em>), contains xss injection attacks, url decode</li>
 <li>Click on <strong>Add Rule</strong> and then click <strong>Save</strong></li>
 </ol>
 </li>
-<li>Click the <strong>Rule JSON editor</strong> and note the structure and syntax of the rule logic. </li>
+<li><strong>Edit</strong> the rule, click the <strong>Rule JSON editor</strong> and note the structure and syntax of the rule logic. </li>
 <li>
-<p>Add an exception statement for the XSS rule to allow access to <em>/reportBuilder/Editor.aspx</em>. <em>Note that we are using the JSON editor here due to the nested logic requred fo rthe exception.</em></p>
+<p>Add an exception statement for the XSS rule to allow access to <em>/reportBuilder/Editor.aspx</em>. <em>Note that we are using the JSON editor here due to the nested logic required for the exception.</em></p>
 <ol>
 <li>After reviewing it, clear the existing editor content for the matchXSS rule and paste the following JSON</li>
 </ol>
@@ -1223,7 +1222,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <ol>
 <li><strong>Regex pattern set name</strong> <em>csrf</em>, <strong>Regular expressions</strong> <em>^[0-9a-f]{40}$</em><ol>
 <li>The Regex pattern above is a simple example that matahes the string length (40) and characters (0-9 or a-f). Copy the Regex pattern set ID into a scratch file to refer to it later.</li>
-<li>Note your AWS account Id and region and add them to the scratch file.</li>
+<li>Note your AWS account Id (<em>in CloudFormation Stack Outputs</em>) and region and add them to the scratch file.</li>
 </ol>
 </li>
 </ol>
@@ -1231,7 +1230,12 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <li>
 <p>Create a new rule and choose <strong>Rule JSON editor</strong></p>
 <ol>
-<li>Paste the following JSON and <strong>update the region, AWS account Id and Regex pattern ID</strong> with the one created in the previous step</li>
+<li>
+<p>Delete any existing text and paste the following JSON below. Review the statements in the JSON</p>
+</li>
+<li>
+<p><strong>update the region, AWS account Id and Regex pattern ID</strong> with the one created in the previous step</p>
+</li>
 </ol>
 <p><details><summary>Nested Statement with Request Hygiene Solution</summary>
 <p></p>
