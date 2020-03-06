@@ -148,12 +148,11 @@ How do the requirements derived from the above questions affect your solution?
 ??? info "Cross Site Scripting Solution"
     1.	Create a new rule named **matchXSS** and for **If a request** choose **matches at least one of the statements (OR)**. Add statements:
         1. all query parameters, contains xss injection attacks, url decode
-        2. body, contains xss injection attacks, html enity decode
-        3. body, contains xss injection attacks, url decode
+        2. body, contains xss injection attacks, html enity decode and url decode
         4. header, cookie (_type manually_), contains xss injection attacks, url decode
         5. Click on **Add Rule** and then click **Save**
-    2.	Click the **Rule JSON editor** and note the structure and syntax of the rule logic. 
-    3. Add an exception statement for the XSS rule to allow access to _/reportBuilder/Editor.aspx_. _Note that we are using the JSON editor here due to the nested logic requred fo rthe exception._
+    2.	**Edit** the rule, click the **Rule JSON editor** and note the structure and syntax of the rule logic. 
+    3. Add an exception statement for the XSS rule to allow access to _/reportBuilder/Editor.aspx_. _Note that we are using the JSON editor here due to the nested logic required for the exception._
 
 	    1. After reviewing it, clear the existing editor content for the matchXSS rule and paste the following JSON
 
@@ -283,11 +282,13 @@ Build rules that ensure the requests your application ends up processing are val
     1.	In the left pane, choose **Regex pattern sets**, **Create regex pattern set** 
         1.	**Regex pattern set name** _csrf_, **Regular expressions** _^[0-9a-f]{40}$_
             1. The Regex pattern above is a simple example that matahes the string length (40) and characters (0-9 or a-f). Copy the Regex pattern set ID into a scratch file to refer to it later.
-            2. Note your AWS account Id and region and add them to the scratch file.
+            2. Note your AWS account Id (_in CloudFormation Stack Outputs_) and region and add them to the scratch file.
 
     2.	Create a new rule and choose **Rule JSON editor**
 
-	    1. Paste the following JSON and **update the region, AWS account Id and Regex pattern ID** with the one created in the previous step
+	    1. Delete any existing text and paste the following JSON below. Review the statements in the JSON
+        
+        2. **update the region, AWS account Id and Regex pattern ID** with the one created in the previous step
 
         <details><summary>Nested Statement with Request Hygiene Solution</summary>
         <p>
