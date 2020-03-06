@@ -288,7 +288,7 @@ Build rules that ensure the requests your application ends up processing are val
 
 	    1. Delete any existing text and paste the following JSON below. Review the statements in the JSON
         
-        2. **update the region, AWS account Id and Regex pattern ID** with the one created in the previous step
+        2. **Update the region, AWS account Id and Regex pattern ID** with the one created in the previous step
 
         <details><summary>Nested Statement with Request Hygiene Solution</summary>
         <p>
