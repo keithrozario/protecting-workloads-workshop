@@ -138,7 +138,7 @@ How do the requirements derived from the above questions affect your solution?
         1. Select the **matchSQLi** rule and click **Edit** (_You should have created this rule in <a href="./#console-walkthrough-creating-a-rule">the walk through above</a>_)
         2. Change **If a request** to **matches at least one of the statements (OR)**
         3. Click **Add another statement**: body, contains sql injection attacks, html entity decode and URL decode
-        4. Click **Add another statement**: header, cookie, contains sql injection attacks, url decode
+        4. Click **Add another statement**: header, cookie (_type manually_), contains sql injection attacks, url decode
     2.  View the existing matchSQLi rule to confirm additional condtions
     3.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
