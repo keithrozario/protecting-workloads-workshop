@@ -104,7 +104,7 @@ Use the following guiding questions when planning WAF rules:
 2.	Click on **Rule builder**, provide **matchSQLi** for the **Name** and keep **Regular rule** for **Type**:
 
 ![WAF Rule 1](./images/waf-add-rule-1.png)
-3.	For **If a request** select **matches the statement**. Under **Statement**, for **Insepect** select **Query string**, for **Match type** select **Contains SQL injection attacks**, for **Text transformation** select **URL decode** and for **Action** select **Block**.
+3.	For **If a request** select **matches the statement**. Under **Statement**, for **Inspect** select **Query string**, for **Match type** select **Contains SQL injection attacks**, for **Text transformation** select **URL decode** and for **Action** select **Block**.
 
 ![WAF Rule 2](./images/waf-add-rule-2.png)
 4.	Click on **Add Rule** and then click **Save**
@@ -139,7 +139,7 @@ How do the requirements derived from the above questions affect your solution?
         2. Change **If a request** to **matches at least one of the statements (OR)**
         3. Click **Add another statement**: body, contains sql injection attacks, html entity decode and URL decode
         4. Click **Add another statement**: header, cookie (_type manually_), contains sql injection attacks, url decode
-    2.  View the existing matchSQLi rule to confirm additional condtions
+    2.  View the existing matchSQLi rule to confirm additional conditions
     3.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
 !!! info "Rule JSON editor"
@@ -148,7 +148,7 @@ How do the requirements derived from the above questions affect your solution?
 ??? info "Cross Site Scripting Solution"
     1.	Create a new rule named **matchXSS** and for **If a request** choose **matches at least one of the statements (OR)**. Add statements:
         1. all query parameters, contains xss injection attacks, url decode
-        2. body, contains xss injection attacks, html enity decode and url decode
+        2. body, contains xss injection attacks, html entity decode and url decode
         4. header, cookie (_type manually_), contains xss injection attacks, url decode
         5. Click on **Add Rule** and then click **Save**
     2.	**Edit** the rule, click the **Rule JSON editor** and note the structure and syntax of the rule logic. 
@@ -281,7 +281,7 @@ Build rules that ensure the requests your application ends up processing are val
 ??? info "Solution"
     1.	In the left pane, choose **Regex pattern sets**, **Create regex pattern set** 
         1.	**Regex pattern set name** _csrf_, **Regular expressions** _^[0-9a-f]{40}$_
-            1. The Regex pattern above is a simple example that matahes the string length (40) and characters (0-9 or a-f). Copy the Regex pattern set ID into a scratch file to refer to it later.
+            1. The Regex pattern above is a simple example that matches the string length (40) and characters (0-9 or a-f). Copy the Regex pattern set ID into a scratch file to refer to it later.
             2. Note your AWS account Id (_in CloudFormation Stack Outputs_) and region and add them to the scratch file.
 
     2.	Create a new rule and choose **Rule JSON editor**
@@ -368,7 +368,7 @@ Build rules that ensure the requests your application ends up processing are val
 
 !!! Attention
     <p style="font-size:14px;">
-      **If you have 30 minutes or less remaining in the workshop, you should consider proceeding to the [Host Layer round](/workshop/host-layer/assess/).** There will be time during the Inspector Assessment run to continue the WAF excercises.
+      **If you have 30 minutes or less remaining in the workshop, you should consider proceeding to the [Host Layer round](/workshop/host-layer/assess/).** There will be time during the Inspector Assessment run to continue the WAF exercises.
     </p>
 
 !!! info "Note About Remaining Exercises"

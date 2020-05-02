@@ -1,8 +1,8 @@
 # AWS Protecting Workloads Workshop - Cleanup
 
-!!! info  "Do not perform cleanup if you are at an *AWS event* where the *Event Engine* is being used. This is handled automatically." 
+!!! info  "Do not perform cleanup if you are at an *AWS event* where the *Event Engine* is being used. This is handled automatically."
 
-??? info  "Click here if you're *not at an AWS event* or are using your own account" 
+??? info  "Click here if you're *not at an AWS event* or are using your own account"
 
     Now that you have completed this workshop, follow the steps below to clean up the artifacts that were created.
 
@@ -16,7 +16,7 @@
 
     5.  Go to the Amazon Inspector console.
 
-    6.  Click on the **Assessment runs** menu item and delete the runs you created.  You will be prompted for approval to delete the findings associdated with the runs.
+    6.  Click on the **Assessment runs** menu item and delete the runs you created.  You will be prompted for approval to delete the findings associated with the runs.
 
     7.  Click on the **Assessment templates** menu item and delete the template you created.
 
