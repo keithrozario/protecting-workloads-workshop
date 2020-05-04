@@ -14,17 +14,17 @@ Now that you have remediated the environment, you will again use Amazon Inspecto
 
 ##  Explore AWS Systems Manager Maintenance Windows
 
-While Inspector is running, you will learn about AWS Systems Manager Maintenance Windows.  AWS Systems Manager Maintenance Windows let you define a schedule for things like patching an operating system.  So, rather than applying patches once as you did earlier, you can set up a maintenance window to apply patches on an ongoing basis.  Each maintenance window has a schedule (when the maintenace is to occur), a set of registered targets for the maintance (in this case, the Amazon EC2 instances that are part of this workshop), and a set of registered tasks (in this case, the patching operation). 
+While Inspector is running, you will learn about AWS Systems Manager Maintenance Windows.  AWS Systems Manager Maintenance Windows let you define a schedule for things like patching an operating system.  So, rather than applying patches once as you did earlier, you can set up a maintenance window to apply patches on an ongoing basis.  Each maintenance window has a schedule (when the maintenance is to occur), a set of registered targets for the maintenance (in this case, the Amazon EC2 instances that are part of this workshop), and a set of registered tasks (in this case, the patching operation). 
 
 ### Create the maintenance window
 
 1. Go to the Systems Manager console window and select **Maintenance Windows**.
 
-2. Click **Create maintance window**.  Use the values in the table below.  You can leave all other defaults in place.  **Note the future start date of the window.**  This is done to avoid interfering with the Inspector scan that is currently running.
+2. Click **Create maintenance window**.  Use the values in the table below.  You can leave all other defaults in place.  **Note the future start date of the window.**  This is done to avoid interfering with the Inspector scan that is currently running.
 
     | Field name | Field Value |
     | ---------- | ----------- |
-    | Type a name for the maintance window | pww_mw |
+    | Type a name for the maintenance window | pww_mw |
     | Specify with | Cron schedule builder |
     | Window starts | Every 12 hours |
     | Duration | 1 hour |
@@ -41,7 +41,7 @@ While Inspector is running, you will learn about AWS Systems Manager Maintenance
 
 ### Register the maintenance window target
 
-1.  In the list of maintenance windows, click on the id of the window corresponding to the maintance window you just created.  The link begins with a *mw-* prefix.
+1.  In the list of maintenance windows, click on the id of the window corresponding to the maintenance window you just created.  The link begins with a *mw-* prefix.
 
 2.  Click the **Actions** button and select the **Register targets** menu item.  Use the values in the table below.  Leave all other fields at their default values.
 
@@ -58,13 +58,13 @@ While Inspector is running, you will learn about AWS Systems Manager Maintenance
 
 3.  Click **Register target** to register the target to the maintenance window based on the information you entered.
 
-### Register the maintannce window task
+### Register the maintenance window task
 
 1.  Click **Maintenance windows** on the left menu.
 
-2.  In the list of maintenance windows, click on the id of the window corresponding to the maintance window you just created.  The link begins with a *mw-* prefix.
+2.  In the list of maintenance windows, click on the id of the window corresponding to the maintenance window you just created.  The link begins with a *mw-* prefix.
 
-3.  Click the **Actions** button and select the **Register Run command task** menu item.  Use the values in the table below.  Leave all other fields at their defualt values.
+3.  Click the **Actions** button and select the **Register Run command task** menu item.  Use the values in the table below.  Leave all other fields at their default values.
 
     | Field name | Field Value |
     | ---------- | ----------- |
@@ -85,7 +85,7 @@ You have now completed the definition of a Systems Manager Maintenance Window.  
 
 ##  Examine the results of the Inspector assessment
 
-Now that you have explored some addtional AWS capabilities, you will examine the results of the second Inspector assessment.
+Now that you have explored some additional AWS capabilities, you will examine the results of the second Inspector assessment.
 
 1.  Go to the Inspector console.  Click **Assessment runs** and periodically refresh the screen.  Wait until the status for the run changes to *Analysis complete*.  The run will take approximately 15 minutes to complete.
 
