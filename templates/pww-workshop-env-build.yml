@@ -31,6 +31,10 @@ Parameters:
     Default: false
     Type: String
     AllowedValues: [true, false]
+  EndPoint:
+    Description: API endpoint for automated scanner.
+    Default: "null"
+    Type: String
   UserName:
     Type: String
     Description: Username to add endpoint for scanning? *Obtain from workshop team if using automated scanner*.
@@ -68,7 +72,7 @@ Parameters:
   AMIPreviousVersionIndex:
     Description: Number of previous version of AMI to use [0=current AMI through 15]
     Type: Number
-    Default: 3
+    Default: 5
     MinValue: 0
     MaxValue: 15
 
@@ -95,6 +99,7 @@ Metadata:
           default: Automated Scanner
         Parameters:
         - AutomatedScanner
+        - EndPoint
         - UserName
         - PassWord
         - ScannerIP01
@@ -112,6 +117,8 @@ Metadata:
         default: Trusted Network CIDR
       AutomatedScanner:
         default: Automated Scanner
+      EndPoint:
+        default: Automated Scanner Endpoint
       UserName:
         default: Automated Scanner Username
       PassWord:
@@ -699,7 +706,7 @@ Resources:
       Runtime: python3.7
       Environment:
         Variables:
-          APIEP: https://orhqd0jp27.execute-api.us-east-1.amazonaws.com/dev/targ
+          APIEP: !Ref EndPoint
           USERNAME: !Ref UserName
           PASSWORD: !Ref PassWord
           TARGID: !GetAtt Alb.DNSName
