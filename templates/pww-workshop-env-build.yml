@@ -13,7 +13,7 @@ Description: WAF Workshop Demo
 ## Parameters
 Parameters:
   EC2InstanceSize:
-    Default: "t3.small"
+    Default: "t2.small"
     Description: Instance size for Web Servers.
     Type: String
     AllowedValues:
