@@ -17,7 +17,7 @@ Confirm that all of the tests in the script pass. If requests (other than canary
 
 ![Final Scan Terminal](./images/final-scan-term.svg)
 
-If the the automated scanner is being used for your event (AWS sponsored), you should also see green for your unique Id <a href="http://waflabdash.awssecworkshops.com/" target="_blank">on the WAF scanning results dashboard</a>.
+If the the automated scanner is being used for your event (AWS sponsored), you should also see green for your unique Id on the WAF scanning results dashboard.
 
 ![WAF Lab Centralized Dashboard](./images/waflabdash-post.png)
 

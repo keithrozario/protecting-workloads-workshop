@@ -85,7 +85,7 @@ What are the results of running the scanner script? Were the simulated malicious
 
 ### Website Scanning Environment and Tools - Automated Scanning
 
-For an AWS sponsored event, in addition to the manual scanning, automated scanning is also performed against your lab website. The automated tests are similar to the manual tests but the results are posted to <a href="http://waflabdash.awssecworkshops.com/" target="_blank">a centralized scanning results dashboard</a> along with the other workshop participants. You can identify the scanning results for your site using the UniqueId found in the CloudFormation outputs.
+For an AWS sponsored event, in addition to the manual scanning, automated scanning is also performed against your lab website. The automated tests are similar to the manual tests but the results are posted to a centralized scanning results dashboard along with the other workshop participants. If the dashboard is available for your event, the url can be located in the **CloudFormation Stack Outputs** under the **WAFDashboard** key. You can identify the scanning results for your site using the UniqueId found in the CloudFormation outputs.
 
 ![WAF Lab Centralized Dashboard](./images/waflabdash-pre.png)
 
