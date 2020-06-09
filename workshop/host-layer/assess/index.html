@@ -691,12 +691,12 @@ AWS Inspector assesses the instances and identifies security findings that you w
 <li>
 <p>Click the <strong>Assessment Templates</strong> on the left menu.  A list of assessment templates appears as shown below.</p>
 <p><img alt="Amazon Inspector Targets" src="../images/assess-inspector-view-templates.png" /></p>
-<p>You will see an assement template whose name begins with <em>AssessmentTemplate</em>.  Assessment templates represent the selection of a target and one or more rules packages.  A rules package is a collection of rules that represent security checks.   This template assesses the previously mentioned target against the following two rules packages:</p>
+<p>You will see an assessment template whose name begins with <em>AssessmentTemplate</em>.  Assessment templates represent the selection of a target and one or more rules packages.  A rules package is a collection of rules that represent security checks.   This template assesses the previously mentioned target against the following two rules packages:</p>
 <p>Common Vulnerabilities and Exposures: The rules in this package help verify whether the EC2 instances in your assessment targets are exposed to common vulnerabilities and exposures (CVEs). Attacks can exploit unpatched vulnerabilities to compromise the confidentiality, integrity, or availability of your service or data. The CVE system provides a reference method for publicly known information security vulnerabilities and exposures. For more information, see <a href="https://cve.mitre.org/">https://cve.mitre.org/</a>{target=_blank}.  You typically remediate findings from this rules package by installing patches.</p>
 <p>Security Best Practices: The rules in this package help determine whether your systems are configured securely.  For example, one rule in this package checks to see if root login has been disabled over ssh.  You typically remediate the findings by adjusting configuration settings.</p>
 </li>
 <li>
-<p>On the Amazon Inspector menu, click <strong>Assessment runs</strong>.  You should see an entry for an assesment that was started on your behalf.  CloudFormation ran this for you to save time.  If the status is not, <em>Analysis complete,</em> then periodically refresh the screen until the status changes to <em>Analysis complete</em> as shown in the figure below.</p>
+<p>On the Amazon Inspector menu, click <strong>Assessment runs</strong>.  You should see an entry for an assessment that was started on your behalf.  CloudFormation ran this for you to save time.  If the status is not, <em>Analysis complete,</em> then periodically refresh the screen until the status changes to <em>Analysis complete</em> as shown in the figure below.</p>
 <p><img alt="Amazon Inspector Runs" src="../images/assess-inspector-view-runs.png" /></p>
 </li>
 <li>

@@ -1041,7 +1041,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 </li>
 </ol>
 <p><img alt="WAF Rule 1" src="../images/waf-add-rule-1.png" />
-3.  For <strong>If a request</strong> select <strong>matches the statement</strong>. Under <strong>Statement</strong>, for <strong>Insepect</strong> select <strong>Query string</strong>, for <strong>Match type</strong> select <strong>Contains SQL injection attacks</strong>, for <strong>Text transformation</strong> select <strong>URL decode</strong> and for <strong>Action</strong> select <strong>Block</strong>.</p>
+3.  For <strong>If a request</strong> select <strong>matches the statement</strong>. Under <strong>Statement</strong>, for <strong>Inspect</strong> select <strong>Query string</strong>, for <strong>Match type</strong> select <strong>Contains SQL injection attacks</strong>, for <strong>Text transformation</strong> select <strong>URL decode</strong> and for <strong>Action</strong> select <strong>Block</strong>.</p>
 <p><img alt="WAF Rule 2" src="../images/waf-add-rule-2.png" />
 4.  Click on <strong>Add Rule</strong> and then click <strong>Save</strong></p>
 <ol>
@@ -1055,7 +1055,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <p>In this phase, we will have a set of 6 exercises walking you through the process of building a basic mitigation rule set for common vulnerabilities. We will build these rules from scratch, so you can gain familiarity with the AWS WAF programming model and you can then write rules specific to your applications. </p>
 <div class="admonition info">
 <p class="admonition-title">Note About Exercise Solutions</p>
-<p>For the exercises below, you will find the high level description and solution configuration for your web ACL. You can test your ACL ruleset at any time using the Red Team Host. For AWS sponsored event, you can also view test results on the <a href="http://waflabdash.awssecworkshops.com/" target="_blank">WAF Lab Dashboard</a>.</p>
+<p>For the exercises below, you will find the high level description and solution configuration for your web ACL. You can test your ACL ruleset at any time using the Red Team Host. For AWS sponsored event, you can also view test results on the WAF Lab Dashboard.</p>
 </div>
 <h3 id="1-sql-injection-cross-site-scripting-mitigation">1. SQL Injection &amp; Cross Site Scripting Mitigation</h3>
 <p>Use the SQL injection, cross-site scripting, as well as string and regex matching to build rules that mitigate injection attacks and cross site scripting attacks.</p>
@@ -1074,7 +1074,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <li>Click <strong>Add another statement</strong>: header, cookie (<em>type manually</em>), contains sql injection attacks, url decode</li>
 </ol>
 </li>
-<li>View the existing matchSQLi rule to confirm additional condtions</li>
+<li>View the existing matchSQLi rule to confirm additional conditions</li>
 <li>Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked</li>
 </ol>
 </details>
@@ -1085,7 +1085,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <details class="info"><summary>Cross Site Scripting Solution</summary><ol>
 <li>Create a new rule named <strong>matchXSS</strong> and for <strong>If a request</strong> choose <strong>matches at least one of the statements (OR)</strong>. Add statements:<ol>
 <li>all query parameters, contains xss injection attacks, url decode</li>
-<li>body, contains xss injection attacks, html enity decode and url decode</li>
+<li>body, contains xss injection attacks, html entity decode and url decode</li>
 <li>header, cookie (<em>type manually</em>), contains xss injection attacks, url decode</li>
 <li>Click on <strong>Add Rule</strong> and then click <strong>Save</strong></li>
 </ol>
@@ -1221,7 +1221,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <p>In the left pane, choose <strong>Regex pattern sets</strong>, <strong>Create regex pattern set</strong> </p>
 <ol>
 <li><strong>Regex pattern set name</strong> <em>csrf</em>, <strong>Regular expressions</strong> <em>^[0-9a-f]{40}$</em><ol>
-<li>The Regex pattern above is a simple example that matahes the string length (40) and characters (0-9 or a-f). Copy the Regex pattern set ID into a scratch file to refer to it later.</li>
+<li>The Regex pattern above is a simple example that matches the string length (40) and characters (0-9 or a-f). Copy the Regex pattern set ID into a scratch file to refer to it later.</li>
 <li>Note your AWS account Id (<em>in CloudFormation Stack Outputs</em>) and region and add them to the scratch file.</li>
 </ol>
 </li>
@@ -1320,7 +1320,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p><p style="font-size:14px;">
-  <strong>If you have 30 minutes or less remaining in the workshop, you should consider proceeding to the <a href="/workshop/host-layer/assess/">Host Layer round</a>.</strong> There will be time during the Inspector Assessment run to continue the WAF excercises.
+  <strong>If you have 30 minutes or less remaining in the workshop, you should consider proceeding to the <a href="/workshop/host-layer/assess/">Host Layer round</a>.</strong> There will be time during the Inspector Assessment run to continue the WAF exercises.
 </p></p>
 </div>
 <div class="admonition info">

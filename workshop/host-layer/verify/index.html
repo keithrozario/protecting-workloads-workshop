@@ -583,8 +583,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#register-the-maintannce-window-task" title="Register the maintannce window task" class="md-nav__link">
-    Register the maintannce window task
+  <a href="#register-the-maintenance-window-task" title="Register the maintenance window task" class="md-nav__link">
+    Register the maintenance window task
   </a>
   
 </li>
@@ -684,8 +684,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#register-the-maintannce-window-task" title="Register the maintannce window task" class="md-nav__link">
-    Register the maintannce window task
+  <a href="#register-the-maintenance-window-task" title="Register the maintenance window task" class="md-nav__link">
+    Register the maintenance window task
   </a>
   
 </li>
@@ -739,14 +739,14 @@
 </li>
 </ol>
 <h2 id="explore-aws-systems-manager-maintenance-windows">Explore AWS Systems Manager Maintenance Windows</h2>
-<p>While Inspector is running, you will learn about AWS Systems Manager Maintenance Windows.  AWS Systems Manager Maintenance Windows let you define a schedule for things like patching an operating system.  So, rather than applying patches once as you did earlier, you can set up a maintenance window to apply patches on an ongoing basis.  Each maintenance window has a schedule (when the maintenace is to occur), a set of registered targets for the maintance (in this case, the Amazon EC2 instances that are part of this workshop), and a set of registered tasks (in this case, the patching operation). </p>
+<p>While Inspector is running, you will learn about AWS Systems Manager Maintenance Windows.  AWS Systems Manager Maintenance Windows let you define a schedule for things like patching an operating system.  So, rather than applying patches once as you did earlier, you can set up a maintenance window to apply patches on an ongoing basis.  Each maintenance window has a schedule (when the maintenance is to occur), a set of registered targets for the maintenance (in this case, the Amazon EC2 instances that are part of this workshop), and a set of registered tasks (in this case, the patching operation). </p>
 <h3 id="create-the-maintenance-window">Create the maintenance window</h3>
 <ol>
 <li>
 <p>Go to the Systems Manager console window and select <strong>Maintenance Windows</strong>.</p>
 </li>
 <li>
-<p>Click <strong>Create maintance window</strong>.  Use the values in the table below.  You can leave all other defaults in place.  <strong>Note the future start date of the window.</strong>  This is done to avoid interfering with the Inspector scan that is currently running.</p>
+<p>Click <strong>Create maintenance window</strong>.  Use the values in the table below.  You can leave all other defaults in place.  <strong>Note the future start date of the window.</strong>  This is done to avoid interfering with the Inspector scan that is currently running.</p>
 <table>
 <thead>
 <tr>
@@ -756,7 +756,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Type a name for the maintance window</td>
+<td>Type a name for the maintenance window</td>
 <td>pww_mw</td>
 </tr>
 <tr>
@@ -795,7 +795,7 @@
 <h3 id="register-the-maintenance-window-target">Register the maintenance window target</h3>
 <ol>
 <li>
-<p>In the list of maintenance windows, click on the id of the window corresponding to the maintance window you just created.  The link begins with a <em>mw-</em> prefix.</p>
+<p>In the list of maintenance windows, click on the id of the window corresponding to the maintenance window you just created.  The link begins with a <em>mw-</em> prefix.</p>
 </li>
 <li>
 <p>Click the <strong>Actions</strong> button and select the <strong>Register targets</strong> menu item.  Use the values in the table below.  Leave all other fields at their default values.</p>
@@ -832,16 +832,16 @@
 <p>Click <strong>Register target</strong> to register the target to the maintenance window based on the information you entered.</p>
 </li>
 </ol>
-<h3 id="register-the-maintannce-window-task">Register the maintannce window task</h3>
+<h3 id="register-the-maintenance-window-task">Register the maintenance window task</h3>
 <ol>
 <li>
 <p>Click <strong>Maintenance windows</strong> on the left menu.</p>
 </li>
 <li>
-<p>In the list of maintenance windows, click on the id of the window corresponding to the maintance window you just created.  The link begins with a <em>mw-</em> prefix.</p>
+<p>In the list of maintenance windows, click on the id of the window corresponding to the maintenance window you just created.  The link begins with a <em>mw-</em> prefix.</p>
 </li>
 <li>
-<p>Click the <strong>Actions</strong> button and select the <strong>Register Run command task</strong> menu item.  Use the values in the table below.  Leave all other fields at their defualt values.</p>
+<p>Click the <strong>Actions</strong> button and select the <strong>Register Run command task</strong> menu item.  Use the values in the table below.  Leave all other fields at their default values.</p>
 <table>
 <thead>
 <tr>
@@ -885,7 +885,7 @@
 </ol>
 <p>You have now completed the definition of a Systems Manager Maintenance Window.  The purpose of this additional task is to show you how you could implement patching on an ongoing basis in your environment.</p>
 <h2 id="examine-the-results-of-the-inspector-assessment">Examine the results of the Inspector assessment</h2>
-<p>Now that you have explored some addtional AWS capabilities, you will examine the results of the second Inspector assessment.</p>
+<p>Now that you have explored some additional AWS capabilities, you will examine the results of the second Inspector assessment.</p>
 <ol>
 <li>
 <p>Go to the Inspector console.  Click <strong>Assessment runs</strong> and periodically refresh the screen.  Wait until the status for the run changes to <em>Analysis complete</em>.  The run will take approximately 15 minutes to complete.</p>
