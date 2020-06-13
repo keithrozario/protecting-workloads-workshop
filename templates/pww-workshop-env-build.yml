@@ -947,8 +947,8 @@ Resources:
             # yum update -y
             yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
             amazon-linux-extras install -y python3 
-            sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-            yum install -y curl git httpie
+            yum install -y curl git python-pip
+            pip3 install httpie
             /usr/bin/aws configure set region ${AWS::Region}
             /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource RedTeamHost --configsets Scanner_Install --region ${AWS::Region}
             /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource RedTeamHost --region ${AWS::Region}
