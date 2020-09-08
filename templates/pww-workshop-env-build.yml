@@ -511,7 +511,6 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
           # yum update -y
-          yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
           curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -
           amazon-linux-extras install -y php7.2
           yum install -y nodejs curl git httpd
@@ -945,7 +944,6 @@ Resources:
           Fn::Base64: !Sub |
             #!/bin/bash -xe
             # yum update -y
-            yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
             amazon-linux-extras install -y python3 
             yum install -y curl git python-pip
             pip3 install httpie
