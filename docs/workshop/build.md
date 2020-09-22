@@ -52,14 +52,10 @@
 
     2. On the Specify stack details step, update the following parameters depending on how you are doing this workshop:
 
-        info "Individual or an event not sponsored by AWS"
-
-    - If you are sharing an AWS account with someone else in the same region, change the name of the stack to __pww-yourinitials__
-    - Automated Scanner: __Set to false.__
-    - Scanner Username: Enter __null__
-    - Scanner Password: Enter __null__
-    - Trusted Network CIDR: Enter a trusted IP or CIDR range you will access the site from using a web browser. You can obtain your current IP at <a href="https://ifconfig.co/" target="_blank">Ifconfig.co</a> The entry should follow CIDR notation. i.e. 10.10.10.10/32 for a single host.
-    - Keep the defaults for the rest of the parameters.
+        !!! info "Individual or an event not sponsored by AWS"
+            - If you are sharing an AWS account with someone else in the same region, change the name of the stack to __pww-yourinitials__
+            - Trusted Network CIDR: Enter a trusted IP or CIDR range you will access the site from using a web browser. You can obtain your current IP at <a href="https://ifconfig.co/" target="_blank">Ifconfig.co</a> The entry should follow CIDR notation. i.e. 10.10.10.10/32 for a single host.
+            - Keep the defaults for the rest of the parameters.
 
     3. Click ***Next*** 
 
