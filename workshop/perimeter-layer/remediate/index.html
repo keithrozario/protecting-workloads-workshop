@@ -1202,8 +1202,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <details class="info"><summary>Solution</summary><ol>
 <li>Create a new rule named <strong>matchTraversal</strong> and for <strong>If a request</strong> choose <strong>matches at least one of the statements (OR)</strong>. Add statements:<ol>
 <li>uri_path, starts with string, <em>/include</em>, url_decode </li>
-<li>query_string, contains string, <em>../</em>, url_decode</li>
-<li>query_string, contains string, <em>://</em>, url_decode</li>
+<li>all_query_parameters, contains string, <em>../</em>, url_decode</li>
 <li>Click on <strong>Add Rule</strong> and then click <strong>Save</strong></li>
 </ol>
 </li>
