@@ -261,9 +261,8 @@ Build rules that ensure the relevant HTTP request components used for input into
 ??? info "Solution"
     1.	Create a new rule named **matchTraversal** and for **If a request** choose **matches at least one of the statements (OR)**. Add statements:
         1. uri_path, starts with string, _/include_, url_decode 
-        2. query_string, contains string, _../_, url_decode
-        3. query_string, contains string, _://_, url_decode
-        4. Click on **Add Rule** and then click **Save**
+        2. all_query_parameters, contains string, _../_, url_decode
+        3. Click on **Add Rule** and then click **Save**
     2.  Re-run the WAF test script (runscanner) from your red team host to confirm requests are blocked
 
 ### 3. Enforce Request Hygiene
