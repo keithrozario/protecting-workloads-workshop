@@ -26,35 +26,6 @@ Parameters:
     AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
     Type: String
     Default: 0.0.0.0/0
-  AutomatedScanner:
-    Description: Use automated scanner? Leave true for AWS cponsored event. Set false if non-AWS sponsored event or not using automated scanner.
-    Default: false
-    Type: String
-    AllowedValues: [true, false]
-  EndPoint:
-    Description: API endpoint for automated scanner.
-    Default: "null"
-    Type: String
-  UserName:
-    Type: String
-    Description: Username to add endpoint for scanning? *Obtain from workshop team if using automated scanner*.
-    AllowedPattern: ".+"
-    Default: "null"
-    NoEcho: true
-  PassWord:
-    Type: String
-    Description: Password to add endpoint for scanning? *Obtain from workshop team if using automated scanner*.
-    AllowedPattern: ".+"
-    Default: "null"
-    NoEcho: true
-  ScannerIP01:
-    Type: String
-    Default: 54.156.237.144/32
-    Description: Allow incoming connections from IP of scanner. Leave default.
-  ScannerIP02:
-    Type: String
-    Default: 3.208.55.167/32
-    Description: Allow incoming connections from IP of scanner. Leave default.
   ArtifactsBucket:
     Description: S3 bucket with artifact files (Lambda functions, templates, html files, etc.). Leave default.
     Type: String
@@ -81,7 +52,6 @@ Parameters:
 #    Description: Latest Amazon Linux 2 AMI ID. Leave default.
 #    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 
-
 ## Metadata
 Metadata:
 
@@ -95,15 +65,6 @@ Metadata:
         - EC2InstanceSize
         - MyTrustedNetwork
         - AMIPreviousVersionIndex
-      - Label:
-          default: Automated Scanner
-        Parameters:
-        - AutomatedScanner
-        - EndPoint
-        - UserName
-        - PassWord
-        - ScannerIP01
-        - ScannerIP02
       - Label:
           default: Artifact Configuration
         Parameters:
@@ -131,30 +92,11 @@ Metadata:
         default: S3 artifact bucket
       ArtifactsPrefix:
         default: S3 artifact path
-#      AmazonLinux2AmiId:
-#        default: Amazon Linux AMI Id
-
-Conditions:
-# Register with automated scanner?
-  UseAutomatedScanner: !Equals [!Ref AutomatedScanner, 'true' ]
 
 ## Mappings
 Mappings:
-  EC2AMI:
-    us-east-1:
-      AmznLinux: ami-0b8d0d6ac70e5750c
-    us-east-2:
-      AmznLinux: ami-01aeea5586d1cb5e9
-    us-west-1:
-      AmznLinux: ami-01cd822533dfab45e
-    us-west-2:
-      AmznLinux: ami-0e07063c9635a53aa
-    eu-west-1:
-      AmznLinux: ami-0a166fb5b1a5d9532
-    ap-northeast-1:
-      AmznLinux: ami-0148288598227344a
 
-# Beginning of jsl changes for running first Inspector scan automatically
+# Beginning of changes for running first Inspector scan automatically
 
   RulesPackagesMap: 
     us-west-2:
@@ -234,7 +176,7 @@ Mappings:
       SBP: 'arn:aws-us-gov:inspector:us-gov-west-1:850862329162:rulespackage/0-rOTGqe5G'
       RBA: 'arn:aws-us-gov:inspector:us-gov-west-1:850862329162:rulespackage/0-JMyjuzoW'
       
-# End of jsl changes for running first Inspector scan automatically
+# End of changes for running first Inspector scan automatically
 
 ## Resources
 Resources:
@@ -409,39 +351,12 @@ Resources:
         - Key: Name
           Value: !Join ["-" , [!Ref 'AWS::StackName', AlbSg]]
 
-  sgLoadBalancer2:
-    Condition: UseAutomatedScanner
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref vpc
-      GroupDescription: Load Balancer Security Group
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: !Ref MyTrustedNetwork
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: !Ref ScannerIP01
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: !Ref ScannerIP02
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: !Join ["" , [!Ref natEip, "/32"]]
-      Tags:
-        - Key: Name
-          Value: !Join ["-" , [!Ref 'AWS::StackName', AlbSg]]
-
   Alb:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Scheme: internet-facing
       SecurityGroups: 
-        - !If [ UseAutomatedScanner, !Ref sgLoadBalancer2, !Ref sgLoadBalancer1 ]
+        - !Ref sgLoadBalancer1
       Subnets: [ !Ref sub1Public, !Ref sub2Public ]
       Tags:
         - Key: Name
@@ -488,14 +403,7 @@ Resources:
           FromPort: 0
           ToPort: 65535
           SourceSecurityGroupId: 
-            !If [ UseAutomatedScanner, !Ref sgLoadBalancer2, !Ref sgLoadBalancer1 ]
-
-#        Fn::FindInMap:
-#        - EC2AMI
-#        - !Ref AWS::Region
-#        - AmznLinux
-
-#        !Ref AmazonLinux2AmiId
+            !Ref sgLoadBalancer1
 
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -510,7 +418,7 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
-          # yum update -y
+          #yum update -y
           curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -
           amazon-linux-extras install -y php7.2
           yum install -y nodejs curl git httpd
@@ -548,7 +456,6 @@ Resources:
                   COMPOSER_ALLOW_SUPERUSER: 1
                   PATH: /usr/bin:/usr/local/bin:/sbin:$PATH
                 command: "cd /var/www/; php /usr/local/bin/composer install; bower install --allow-root; systemctl enable httpd; systemctl start httpd"
-
 
   AutoScalingGroup:
     DependsOn: Alb
@@ -628,7 +535,7 @@ Resources:
   wafALBAssociation:
     Type: AWS::WAFv2::WebACLAssociation
     Properties:
-      ResourceArn: 
+      ResourceArn:
         !Sub 
           - 'arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/${TargetALB}'
           - TargetALB: !GetAtt Alb.LoadBalancerFullName
@@ -686,130 +593,6 @@ Resources:
       Path: /
       Roles:
       - Ref: EC2InstanceRole
-
-  AddScanTarg:
-    Condition: UseAutomatedScanner
-    DependsOn:
-      - "Alb"
-    Type: "Custom::AddScanTarg"
-    Version: "1.0"
-    Properties:
-      ServiceToken: !GetAtt AddScanTargFunction.Arn
-      Region: !Ref "AWS::Region"
-  AddScanTargFunction:
-    Condition: UseAutomatedScanner
-    Type: AWS::Lambda::Function
-    Properties:
-      Description: Add ALB endpoint to scanning engine
-      Handler: index.handler
-      Runtime: python3.7
-      Environment:
-        Variables:
-          APIEP: !Ref EndPoint
-          USERNAME: !Ref UserName
-          PASSWORD: !Ref PassWord
-          TARGID: !GetAtt Alb.DNSName
-          STACKID: !Ref AWS::StackId
-      Role: !GetAtt AddScanTargExecutionRole.Arn
-      Timeout: 60
-      Code:
-        ZipFile: |
-          import cfnresponse
-          import os
-          import boto3
-          import time
-          import json
-          import datetime
-          import logging
-          import string
-          from random import *
-          from botocore.vendored import requests 
-          from base64 import b64decode, b64encode
-          from botocore.exceptions import ClientError
-          from six.moves.urllib.parse import quote, unquote
-
-          logger = logging.getLogger()
-          logger.setLevel(logging.INFO)
-          client = boto3.client('apigateway')
-          APIEP = os.environ['APIEP']
-          TargId = os.environ['TARGID']
-          UserName = os.environ['USERNAME']
-          PassWord = os.environ['PASSWORD']
-          StackId = os.environ['STACKID']
-          class EncodeError(Exception):
-            pass
-          def encode(username, password):
-            if ':' in username:
-                raise EncodeError
-            username_password = '%s:%s' % (quote(username), quote(password))
-            return 'Basic ' + b64encode(username_password.encode()).decode()
-          def handler(event, context):
-            url = APIEP
-            AuthToken = encode(UserName, PassWord)
-            timestamp = int(time.time())
-            headers = {'content-type': 'application/json', 'authorizationToken': AuthToken }
-            logger.info('Received event: {}'.format(json.dumps(event)))
-            try:
-              responseData = {}
-              # Assume failure unless we get 200 response
-              responseStatus = cfnresponse.FAILED
-              if event['RequestType'] == 'Delete':
-                payload = { "Key": { "targid": {"S": TargId } }, "TableName": "waflab" }
-                response = requests.delete(url, data=json.dumps(payload), headers=headers)
-                responseData = {'StatusCode': response.status_code}
-                responseStatus = cfnresponse.SUCCESS
-              elif event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
-                min_char = 8
-                max_char = 8
-                allchar = string.ascii_lowercase + string.digits
-                UUID = "".join(choice(allchar) for x in range(randint(min_char, max_char)))
-                EXP = timestamp + + 60 * 60 * 60
-                payload = { "Item": { "targid": {"S": TargId }, "uuid": {"S": UUID }, "stackid": {"S": StackId}, "timestamp": { "N": str(timestamp) }, "ttl": {"N": str(EXP) } }, "TableName": "waflab" }
-                response = requests.post(url, data=json.dumps(payload), headers=headers)
-                logger.info('Response Text: {}'.format(response.text))
-                responseData = {'UUID': UUID }
-                if 'deny' not in response.text:
-                  responseStatus = cfnresponse.SUCCESS
-              else:
-                responseStatus = cfnresponse.FAILED
-            except ClientError as e:
-              logger.error('Error: {}'.format(e))
-              responseStatus = cfnresponse.FAILED
-            # Log the response status
-            logger.info('Returning response status of: {}'.format(responseStatus))
-            # Send result to stack
-            cfnresponse.send(event, context, responseStatus, responseData)
-  AddScanTargExecutionRole:
-      Condition: UseAutomatedScanner
-      Type: AWS::IAM::Role
-      Properties:
-        AssumeRolePolicyDocument:
-          Version: 2012-10-17
-          Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
-        Policies:
-        - PolicyName: AddTargRole
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-            - Effect: Allow
-              Action:
-              - logs:CreateLogGroup
-              - logs:CreateLogStream
-              - logs:PutLogEvents
-              - logs:DescribeLogStreams
-              Resource: arn:aws:logs:*:*:*
-
-  # Red Team Scanner / Testing Instance
-
-#          Fn::FindInMap:
-#          - EC2AMI
-#          - Ref: AWS::Region
-#          - AmznLinux
-
 
   AMILambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -878,7 +661,7 @@ Resources:
             imageDescriptions=ec2.describe_images(
               Owners=['amazon'],
               Filters=[
-                {'Name': 'name', 'Values': [event['ResourceProperties']['NameFilter']]},
+                {'Name': 'name', 'Values': [event['ResourceProperties']['NameFilter']]}, 
                 {'Name': 'architecture', 'Values': ['x86_64']}
               ],
             )
@@ -902,9 +685,6 @@ Resources:
 #
 # ServiceToken - a pointer to the AWS Lambda function
 # NameFilter - the name filter to pass to the describe_images API
-
-#            !Ref AmazonLinux2AmiId
-
 
   AMIInfo:
     Type: Custom::AMIInfo
@@ -944,9 +724,9 @@ Resources:
           Fn::Base64: !Sub |
             #!/bin/bash -xe
             # yum update -y
+            yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
             amazon-linux-extras install -y python3 
-            yum install -y curl git python-pip
-            pip3 install httpie
+            yum install -y curl git python-pip httpie
             /usr/bin/aws configure set region ${AWS::Region}
             /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource RedTeamHost --configsets Scanner_Install --region ${AWS::Region}
             /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource RedTeamHost --region ${AWS::Region}
@@ -954,7 +734,7 @@ Resources:
         ResourceSignal:
           Timeout: PT15M
 
-# Beginning of jsl changes for running first Inspector scan automatically
+# Beginning of changes for running first Inspector scan automatically
 
 # ICSLRExecutionRole - The AWS Lambda execution
 # role for the custom CloudFormation resources that are used to create the
@@ -1341,31 +1121,23 @@ Resources:
       AssessmentTemplateArn: !GetAtt InspectorTemplate.Arn
       InitialDelaySeconds: 60
 
-# End of jsl changes for running first Inspector scan automatically
+# End of changes for running first Inspector scan automatically
 
-## Outputs
 Outputs:
   cfnVersion:
-    Value: 0.2
+    Value: 4
   accountId:
     Description: AWS account number
     Value: !Ref AWS::AccountId
   Region:
-    Description: AWS region
+    Description: AWS Region
     Value: !Ref AWS::Region
   albEndpoint:
     Description: Test website
     Value: !Join ['', ['http://', !GetAtt Alb.DNSName]]
-  UniqueId:
-    Description: Unique Id used in the WAF Dashboard
-    Condition: UseAutomatedScanner
-    Value: !GetAtt AddScanTarg.UUID
   wafWebACL:
     Description: WAF Web ACL associated with test website
     Value: !Ref wafACL
-  AMIId:
-    Description: AMI Id
-    Value: !GetAtt AMIInfo.Id
   RedTeamHostSession:
     Description: Start interactive shell on Red Team Host
     Value: !Join ['', ['https://console.aws.amazon.com/systems-manager/session-manager/', !Ref RedTeamHost, '?', !Ref 'AWS::Region']]
