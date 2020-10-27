@@ -1,5 +1,5 @@
 {
-	"name": "waf-workshop-demo",
+	"name": "pww/waf-workshop-demo",
 	"description": "WAF Workshop Demo App",
 	"minimum-stability": "dev",
 	"require": {
