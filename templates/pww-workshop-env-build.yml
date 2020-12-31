@@ -709,6 +709,29 @@ Resources:
                   SCANTARG: !Join ['', ['http://', !GetAtt Alb.DNSName]]
                 cwd: /usr/bin
                 command: "echo python3 /usr/bin/scanner.py \"$SCANTARG\" > /usr/bin/runscanner; chmod 755 /usr/bin/runscanner"
+            files:
+              /usr/bin/runratest:
+                mode: "000755"
+                content: !Join ['', [
+                  '#!/bin/bash
+
+                  ', '#Script to trigger WAF rate-based rule
+
+                  ', 'COUNTER=0
+
+                  ', 'for j in `seq 1 400`;
+
+                  ', 'do
+
+                  ', ' let COUNTER++
+
+                  ', ' printf "Request %d\n response" $COUNTER
+
+                  ', ' http -h ', !Join ['', ['http://', !GetAtt Alb.DNSName]], '/form.php
+
+                  ', 'done
+
+                  ',]]
       Properties:
         ImageId:
           !GetAtt AMIInfo.Id

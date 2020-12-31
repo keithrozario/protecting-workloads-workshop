@@ -367,15 +367,40 @@ Build rules that ensure the requests your application ends up processing are val
 
 !!! Attention
     <p style="font-size:14px;">
-      **If you have 30 minutes or less remaining in the workshop, you should consider proceeding to the [Host Layer round](/workshop/host-layer/assess/).** There will be time during the Inspector Assessment run to continue the WAF exercises.
+      **Unless you are only completing the Perimeter Layer round, if you have 30 minutes or less remaining in the workshop, you should consider proceeding to the [Host Layer round](/workshop/host-layer/assess/).** There will be time during the Inspector Assessment run to continue the WAF exercises.
     </p>
+
+### 4. Limit Excessive Requests
+
+Use a rate-based rule to track the rate of requests for each originating IP address, and triggers the rule action to block IPs with rates that go over a limit. You set the limit as the number of requests per 5-minute time span. You can narrow the scope of the requests that AWS WAF counts. To do this, you nest another statement inside the rate-based statement. 
+
+Consider the following:
+
+- How do you prevent traffic from single IP from over consuming resources by sending excessive requests?
+- Are there specific site resources that could benefit from a rate-limit rule?
+
+Build a rate-based rule to limit excessive requests (100 within a 5-minute time span) to a site form; _/form.php_.
+
+??? info "Solution"
+    1.	Create a new rule named **FormRateLimit** of type **Rate-based rule** 
+        1. **Request rate details**, Rate limit, 100
+        2. IP address to use for rate limiting, Source IP address
+        3. Criteria to count request towards rate limit, Only consider requests that match the criteria in a rule statement
+    2. **If a request** choose **matches the statement**. Add statement:
+        1. uri_path, contains string, _/form.php_, None
+        2. Click on **Add Rule** and then click **Save**
+    2.  Run a different WAF test script, ***runratest*** from your red team host to simulate excessive requests to your test site.
+    3. The _runratest_ script will send 400 sequential requests to _/form.php_ on your test site. When the rate-based rule action is triggered, requests will be blocked and return ***responseHTTP/1.1 403 Forbidden*** response instead of ***responseHTTP/1.1 200 OK***. 
+    
+    !!! info "Note About Rate-based rules"
+        The rate limit of 100 over a 5 minute time span is used here to deomonstrate how the rate-based rule works. This value can be increased as needed for production deployments.  By default, AWS WAF aggregates requests based on the IP address from the web request origin, but you can configure the rule to use an IP address from an HTTP header, like X-Forwarded-For, instead.
 
 !!! info "Note About Remaining Exercises"
     **The remaining exercises below are optional. You should proceed to the [Verify Phase](verify.md) and come back to the content below if time permits.**
 
 ---
 
-### 4. Limit Attack Footprint (Optional)
+### 5. Limit Attack Footprint (Optional)
 
 Use geo matching to build rules that limit the attack footprint against the exposed components of your application.
 
@@ -444,7 +469,7 @@ You should consider blocking access to such elements, or limiting access to know
 
     2. Click on **Add Rule** and then click **Save**
 
-### 5. Detect & Mitigate Anomalies (Optional)
+### 6. Detect & Mitigate Anomalies (Optional)
 
 What constitutes an anomaly in regards to your web application? A few common anomaly patterns are:
 
@@ -466,7 +491,7 @@ Do you have mechanisms in place to detect such patterns? If so, can you build ru
             3. text transformation, _None_
         4. Click on **Add Rule** and then click **Save**
 
-### 6. Reputation Lists, Nuisance Requests (Optional)
+### 7. Reputation Lists, Nuisance Requests (Optional)
 
 Reputation lists (whitelists or blacklists) are a good way to filter and stop servicing low value requests. This can reduce operating costs, and reduce exposure to attack vectors. Reputation lists can be self-maintained: lists of identifiable actors that you have determined are undesired. They can be identified any number of ways:
 
