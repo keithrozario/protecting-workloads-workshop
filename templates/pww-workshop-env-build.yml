@@ -1148,7 +1148,7 @@ Resources:
 
 Outputs:
   cfnVersion:
-    Value: 4
+    Value: 5
   accountId:
     Description: AWS account number
     Value: !Ref AWS::AccountId
