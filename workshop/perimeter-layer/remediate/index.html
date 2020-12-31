@@ -1335,7 +1335,7 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 </p></p>
 </div>
 <h3 id="4-limit-excessive-requests">4. Limit Excessive Requests</h3>
-<p>Use a rate-based rule to track the rate of requests for each originating IP address, and triggers the rule action to block IPs with rates that go over a limit. You set the limit as the number of requests per 5-minute time span. You can narrow the scope of the requests that AWS WAF counts. To do this, you nest another statement inside the rate-based statement. </p>
+<p>Use a rate-based rule to track the rate of requests for each originating IP address and trigger the rule action to block IPs with rates that go over a limit. You set the limit as the number of requests per 5-minute time span. You can narrow the scope of the requests that AWS WAF counts. To do this, you nest another statement inside the rate-based statement. </p>
 <p>Consider the following:</p>
 <ul>
 <li>How do you prevent traffic from single IP from over consuming resources by sending excessive requests?</li>
@@ -1354,8 +1354,12 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <li>Click on <strong>Add Rule</strong> and then click <strong>Save</strong></li>
 </ol>
 </li>
-<li>Run a different WAF test script, <strong><em>runratest</em></strong> from your red team host to simulate excessive requests to your test site.</li>
-<li>The <em>runratest</em> script will send 400 sequential requests to <em>/form.php</em> on your test site. When the rate-based rule action is triggered, requests will be blocked and return <strong><em>responseHTTP/1.1 403 Forbidden</em></strong> response instead of <strong><em>responseHTTP/1.1 200 OK</em></strong>. </li>
+<li>
+<p>Run a different WAF test script, <code>runratest</code> from your red team host to simulate excessive requests to your test site.</p>
+</li>
+<li>
+<p>The <strong><em>runratest</em></strong> script will send 400 sequential requests to <em>/form.php</em> on your test site. When the rate-based rule action is triggered, requests will be blocked and return <strong><em>responseHTTP/1.1 403 Forbidden</em></strong> response instead of <strong><em>responseHTTP/1.1 200 OK</em></strong>. </p>
+</li>
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Note About Rate-based rules</p>
