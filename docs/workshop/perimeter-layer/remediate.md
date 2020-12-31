@@ -393,7 +393,7 @@ Build a rate-based rule to limit excessive requests (100 within a 5-minute time 
     3. The _runratest_ script will send 400 sequential requests to _/form.php_ on your test site. When the rate-based rule action is triggered, requests will be blocked and return ***responseHTTP/1.1 403 Forbidden*** response instead of ***responseHTTP/1.1 200 OK***. 
     
     !!! info "Note About Rate-based rules"
-        The rate limit of 100 over a 5 minute time span is used here to deomonstrate how the rate-based rule works. This value can be increased as needed for production deployments.  By default, AWS WAF aggregates requests based on the IP address from the web request origin, but you can configure the rule to use an IP address from an HTTP header, like X-Forwarded-For, instead.
+        The rate limit of 100 over a 5 minute time span is used here to deomonstrate how the rate-based rule works. This value can be increased as needed for production deployments.  By default, AWS WAF aggregates requests based on the IP address from the web request origin, but you can configure the rule to use an IP address from an HTTP header, like X-Forwarded-For, instead. Learn more about <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html" target="_blank">Rate-based AWS WAF rules</a>.
 
 !!! info "Note About Remaining Exercises"
     **The remaining exercises below are optional. You should proceed to the [Verify Phase](verify.md) and come back to the content below if time permits.**
