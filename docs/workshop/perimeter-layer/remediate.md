@@ -372,7 +372,7 @@ Build rules that ensure the requests your application ends up processing are val
 
 ### 4. Limit Excessive Requests
 
-Use a rate-based rule to track the rate of requests for each originating IP address, and triggers the rule action to block IPs with rates that go over a limit. You set the limit as the number of requests per 5-minute time span. You can narrow the scope of the requests that AWS WAF counts. To do this, you nest another statement inside the rate-based statement. 
+Use a rate-based rule to track the rate of requests for each originating IP address and trigger the rule action to block IPs with rates that go over a limit. You set the limit as the number of requests per 5-minute time span. You can narrow the scope of the requests that AWS WAF counts. To do this, you nest another statement inside the rate-based statement. 
 
 Consider the following:
 
@@ -389,8 +389,9 @@ Build a rate-based rule to limit excessive requests (100 within a 5-minute time 
     2. **If a request** choose **matches the statement**. Add statement:
         1. uri_path, contains string, _/form.php_, None
         2. Click on **Add Rule** and then click **Save**
-    2.  Run a different WAF test script, ***runratest*** from your red team host to simulate excessive requests to your test site.
-    3. The _runratest_ script will send 400 sequential requests to _/form.php_ on your test site. When the rate-based rule action is triggered, requests will be blocked and return ***responseHTTP/1.1 403 Forbidden*** response instead of ***responseHTTP/1.1 200 OK***. 
+    2.  Run a different WAF test script, ```` runratest ```` from your red team host to simulate excessive requests to your test site.
+
+    3. The ___runratest___ script will send 400 sequential requests to _/form.php_ on your test site. When the rate-based rule action is triggered, requests will be blocked and return ***responseHTTP/1.1 403 Forbidden*** response instead of ***responseHTTP/1.1 200 OK***. 
     
     !!! info "Note About Rate-based rules"
         The rate limit of 100 over a 5 minute time span is used here to deomonstrate how the rate-based rule works. This value can be increased as needed for production deployments.  By default, AWS WAF aggregates requests based on the IP address from the web request origin, but you can configure the rule to use an IP address from an HTTP header, like X-Forwarded-For, instead. Learn more about <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html" target="_blank">Rate-based AWS WAF rules</a>.
