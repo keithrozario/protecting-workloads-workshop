@@ -613,8 +613,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-limit-excessive-requests" title="4. Limit Excessive Requests" class="md-nav__link">
-    4. Limit Excessive Requests
+  <a href="#4-detect-mitigate-anomalies" title="4. Detect &amp; Mitigate Anomalies" class="md-nav__link">
+    4. Detect &amp; Mitigate Anomalies
   </a>
   
 </li>
@@ -627,15 +627,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-detect-mitigate-anomalies-optional" title="6. Detect &amp; Mitigate Anomalies (Optional)" class="md-nav__link">
-    6. Detect &amp; Mitigate Anomalies (Optional)
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-reputation-lists-nuisance-requests-optional" title="7. Reputation Lists, Nuisance Requests (Optional)" class="md-nav__link">
-    7. Reputation Lists, Nuisance Requests (Optional)
+  <a href="#6-reputation-lists-nuisance-requests-optional" title="6. Reputation Lists, Nuisance Requests (Optional)" class="md-nav__link">
+    6. Reputation Lists, Nuisance Requests (Optional)
   </a>
   
 </li>
@@ -902,8 +895,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-limit-excessive-requests" title="4. Limit Excessive Requests" class="md-nav__link">
-    4. Limit Excessive Requests
+  <a href="#4-detect-mitigate-anomalies" title="4. Detect &amp; Mitigate Anomalies" class="md-nav__link">
+    4. Detect &amp; Mitigate Anomalies
   </a>
   
 </li>
@@ -916,15 +909,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-detect-mitigate-anomalies-optional" title="6. Detect &amp; Mitigate Anomalies (Optional)" class="md-nav__link">
-    6. Detect &amp; Mitigate Anomalies (Optional)
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-reputation-lists-nuisance-requests-optional" title="7. Reputation Lists, Nuisance Requests (Optional)" class="md-nav__link">
-    7. Reputation Lists, Nuisance Requests (Optional)
+  <a href="#6-reputation-lists-nuisance-requests-optional" title="6. Reputation Lists, Nuisance Requests (Optional)" class="md-nav__link">
+    6. Reputation Lists, Nuisance Requests (Optional)
   </a>
   
 </li>
@@ -965,7 +951,7 @@ You are now going to design and implement an AWS WAF ruleset to help mitigate th
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p><p style="font-size:14px;">
-  Please ensure you are <strong>using the improved AWS WAF console and API experience</strong> for this workshop.
+  If the list of Web ACLs appears empty select the correct AWS Region based on the AWS region where the CloudFormation stack was launched <strong>IN THE Web ACLs area of the window</strong>. Please ensure you are <strong>NOT using the AWS WAF Classic console</strong> for this workshop.
 </p></p>
 </div>
 <h2 id="identify-the-waf-acl-for-your-site">Identify the WAF ACL for your Site</h2>
@@ -986,7 +972,7 @@ Once selected, you will be redirected to the AWS WAF &amp; AWS Shield service co
 </li>
 </ol>
 <p><img alt="WAF Home" src="../images/waf-home.png" />
-3.  In the side bar menu on the left, pick the Web ACLs option under the AWS WAF heading. If the list of Web ACLs appears empty select the correct AWS Region as indicated on your credentials card in the Filter dropdown <strong>IN THE Web ACLs area of the window</strong>. If you are sharing the same account with other participants you can identify your WAF ACL by the Id in the stack outputs in the region where the stack was launched.</p>
+3.  In the side bar menu on the left, pick the Web ACLs option under the AWS WAF heading. If the list of Web ACLs appears empty select the correct AWS Region based on the AWS region where the CloudFormation stack was launched <strong>IN THE Web ACLs area of the window</strong>. If you are sharing the same account with other participants you can identify your WAF ACL by the Id in the stack outputs in the region where the stack was launched.</p>
 <p><img alt="WAF ACL Home" src="../images/waf-acl-home.png" />
 4. Click on the WAF Web ACL Name to select the existing Web ACL. Once the detail pane is loaded on the left of your screen, you will see three tabs: Requests, Rules, and Logging. Toggle to Rules:</p>
 <p><img alt="WAF ACL Rules" src="../images/waf-acl-rules.png" />
@@ -1334,12 +1320,14 @@ Validate that you are able to see a pre-existing rule, configured to block reque
   <strong>Unless you are only completing the Perimeter Layer round, if you have 30 minutes or less remaining in the workshop, you should consider proceeding to the <a href="/workshop/host-layer/assess/">Host Layer round</a>.</strong> There will be time during the Inspector Assessment run to continue the WAF exercises.
 </p></p>
 </div>
-<h3 id="4-limit-excessive-requests">4. Limit Excessive Requests</h3>
+<h3 id="4-detect-mitigate-anomalies">4. Detect &amp; Mitigate Anomalies</h3>
 <p>Use a rate-based rule to track the rate of requests for each originating IP address and trigger the rule action to block IPs with rates that go over a limit. You set the limit as the number of requests per 5-minute time span. You can narrow the scope of the requests that AWS WAF counts. To do this, you nest another statement inside the rate-based statement. </p>
-<p>Consider the following:</p>
+<p>What constitutes an anomaly in regards to your web application? A few common anomaly patterns are:</p>
 <ul>
-<li>How do you prevent traffic from single IP from over consuming resources by sending excessive requests?</li>
-<li>Are there specific site resources that could benefit from a rate-limit rule?</li>
+<li>Unusually elevated volume of requests in general</li>
+<li>Unusually elevated volumes of requests to specific URI paths</li>
+<li>Unusually elevated levels of requests generating specific non-HTTP status 200 responses</li>
+<li>Unusually elevated volumes from certain sources (IPs, geographies)</li>
 </ul>
 <p>Build a rate-based rule to limit excessive requests (100 within a 5-minute time span) to a site form; <em>/form.php</em>.</p>
 <details class="info"><summary>Solution</summary><ol>
@@ -1349,18 +1337,15 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 <li>Criteria to count request towards rate limit, Only consider requests that match the criteria in a rule statement</li>
 </ol>
 </li>
-<li><strong>If a request</strong> choose <strong>matches the statement</strong>. Add statement:<ol>
-<li>uri_path, contains string, <em>/form.php</em>, None</li>
+<li><strong>If a request</strong> choose <strong>matches at least one of the statements (OR)</strong>. Add statements:<ol>
+<li>uri_path, starts with string, <em>/form.php</em>, None</li>
+<li>http_method, exactly matches string, <em>POST</em> <em>(type in)</em>, None</li>
+</ol>
+</li>
 <li>Click on <strong>Add Rule</strong> and then click <strong>Save</strong></li>
+<li>Run a different WAF test script, <code>runratest</code> from your red team host to simulate excessive requests to your test site.</li>
 </ol>
-</li>
-<li>
-<p>Run a different WAF test script, <code>runratest</code> from your red team host to simulate excessive requests to your test site.</p>
-</li>
-<li>
 <p>The <strong><em>runratest</em></strong> script will send 400 sequential requests to <em>/form.php</em> on your test site. When the rate-based rule action is triggered, requests will be blocked and return <strong><em>responseHTTP/1.1 403 Forbidden</em></strong> response instead of <strong><em>responseHTTP/1.1 200 OK</em></strong>. </p>
-</li>
-</ol>
 <div class="admonition info">
 <p class="admonition-title">Note About Rate-based rules</p>
 <p>The rate limit of 100 over a 5 minute time span is used here to deomonstrate how the rate-based rule works. This value can be increased as needed for production deployments.  By default, AWS WAF aggregates requests based on the IP address from the web request origin, but you can configure the rule to use an IP address from an HTTP header, like X-Forwarded-For, instead. Learn more about <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html" target="_blank">Rate-based AWS WAF rules</a>.</p>
@@ -1438,38 +1423,14 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 </li>
 </ol>
 </details>
-<h3 id="6-detect-mitigate-anomalies-optional">6. Detect &amp; Mitigate Anomalies (Optional)</h3>
-<p>What constitutes an anomaly in regards to your web application? A few common anomaly patterns are:</p>
-<ul>
-<li>Unusually elevated volume of requests in general</li>
-<li>Unusually elevated volumes of requests to specific URI paths</li>
-<li>Unusually elevated levels of requests generating specific non-HTTP status 200 responses</li>
-<li>Unusually elevated volumes from certain sources (IPs, geographies)</li>
-<li>Usual request signatures (referrers, user agent strings, content types, etc)</li>
-</ul>
-<p>Do you have mechanisms in place to detect such patterns? If so, can you build rules to mitigate them?</p>
-<details class="info"><summary>Solution</summary><ol>
-<li>Create a new rule named <strong>matchRateLogin</strong> of type <strong>Rate-based rule</strong><ol>
-<li><strong>Rate limit</strong> 1000</li>
-<li>choose <strong>Only consider requests that match the criteria in a rule statement</strong></li>
-<li>choose <strong>If a request</strong> choose <strong>matches at least one of the statements (OR)</strong>. Add statements:<ol>
-<li>uri_path, starts with string, <em>/login.php</em></li>
-<li>http_method, exactly matches string, <em>POST</em></li>
-<li>text transformation, <em>None</em></li>
-</ol>
-</li>
-<li>Click on <strong>Add Rule</strong> and then click <strong>Save</strong></li>
-</ol>
-</li>
-</ol>
-</details>
-<h3 id="7-reputation-lists-nuisance-requests-optional">7. Reputation Lists, Nuisance Requests (Optional)</h3>
+<h3 id="6-reputation-lists-nuisance-requests-optional">6. Reputation Lists, Nuisance Requests (Optional)</h3>
 <p>Reputation lists (whitelists or blacklists) are a good way to filter and stop servicing low value requests. This can reduce operating costs, and reduce exposure to attack vectors. Reputation lists can be self-maintained: lists of identifiable actors that you have determined are undesired. They can be identified any number of ways:</p>
 <ul>
 <li>the source IP address</li>
 <li>the user agent string</li>
 <li>reuse of hijacked authorization or session tokens,</li>
 <li>attempting to make requests to paths that clearly do not exist in your application but are well known vulnerable software packages (probing)</li>
+<li>Usual request signatures (referrers, user agent strings, content types, etc)</li>
 </ul>
 <p>Build blacklists of such actors using the relevant statements and set up rules to match and block them. An example IP-based blacklist already exists in your sandbox environment.</p>
 <p>Reputation lists can also be maintained by third parties. The AWS WAF Security Automations allow you to implement IP-based reputation lists.</p>
