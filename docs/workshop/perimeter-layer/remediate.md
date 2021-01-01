@@ -10,7 +10,7 @@ You are now going to design and implement an AWS WAF ruleset to help mitigate th
 
 !!! Attention
     <p style="font-size:14px;">
-      Please ensure you are **using the improved AWS WAF console and API experience** for this workshop.
+      If the list of Web ACLs appears empty select the correct AWS Region based on the AWS region where the CloudFormation stack was launched **IN THE Web ACLs area of the window**. Please ensure you are **NOT using the AWS WAF Classic console** for this workshop.
     </p>
 
 ## Identify the WAF ACL for your Site
@@ -26,7 +26,7 @@ Make sure you select the appropriate AWS Region when working in the AWS Manageme
 Once selected, you will be redirected to the AWS WAF & AWS Shield service console. You may see an initial landing page at first. Choose Go to AWS WAF:
 
 ![WAF Home](./images/waf-home.png)
-3.  In the side bar menu on the left, pick the Web ACLs option under the AWS WAF heading. If the list of Web ACLs appears empty select the correct AWS Region as indicated on your credentials card in the Filter dropdown **IN THE Web ACLs area of the window**. If you are sharing the same account with other participants you can identify your WAF ACL by the Id in the stack outputs in the region where the stack was launched.
+3.  In the side bar menu on the left, pick the Web ACLs option under the AWS WAF heading. If the list of Web ACLs appears empty select the correct AWS Region based on the AWS region where the CloudFormation stack was launched **IN THE Web ACLs area of the window**. If you are sharing the same account with other participants you can identify your WAF ACL by the Id in the stack outputs in the region where the stack was launched.
 
 ![WAF ACL Home](./images/waf-acl-home.png)
 4. Click on the WAF Web ACL Name to select the existing Web ACL. Once the detail pane is loaded on the left of your screen, you will see three tabs: Requests, Rules, and Logging. Toggle to Rules:
@@ -370,14 +370,16 @@ Build rules that ensure the requests your application ends up processing are val
       **Unless you are only completing the Perimeter Layer round, if you have 30 minutes or less remaining in the workshop, you should consider proceeding to the [Host Layer round](/workshop/host-layer/assess/).** There will be time during the Inspector Assessment run to continue the WAF exercises.
     </p>
 
-### 4. Limit Excessive Requests
+### 4. Detect & Mitigate Anomalies
 
 Use a rate-based rule to track the rate of requests for each originating IP address and trigger the rule action to block IPs with rates that go over a limit. You set the limit as the number of requests per 5-minute time span. You can narrow the scope of the requests that AWS WAF counts. To do this, you nest another statement inside the rate-based statement. 
 
-Consider the following:
+What constitutes an anomaly in regards to your web application? A few common anomaly patterns are:
 
-- How do you prevent traffic from single IP from over consuming resources by sending excessive requests?
-- Are there specific site resources that could benefit from a rate-limit rule?
+- Unusually elevated volume of requests in general
+- Unusually elevated volumes of requests to specific URI paths
+- Unusually elevated levels of requests generating specific non-HTTP status 200 responses
+- Unusually elevated volumes from certain sources (IPs, geographies)
 
 Build a rate-based rule to limit excessive requests (100 within a 5-minute time span) to a site form; _/form.php_.
 
@@ -386,12 +388,13 @@ Build a rate-based rule to limit excessive requests (100 within a 5-minute time 
         1. **Request rate details**, Rate limit, 100
         2. IP address to use for rate limiting, Source IP address
         3. Criteria to count request towards rate limit, Only consider requests that match the criteria in a rule statement
-    2. **If a request** choose **matches the statement**. Add statement:
-        1. uri_path, contains string, _/form.php_, None
-        2. Click on **Add Rule** and then click **Save**
-    2.  Run a different WAF test script, ```` runratest ```` from your red team host to simulate excessive requests to your test site.
-
-    3. The ___runratest___ script will send 400 sequential requests to _/form.php_ on your test site. When the rate-based rule action is triggered, requests will be blocked and return ***responseHTTP/1.1 403 Forbidden*** response instead of ***responseHTTP/1.1 200 OK***. 
+    2. **If a request** choose **matches at least one of the statements (OR)**. Add statements:
+        1. uri_path, starts with string, _/form.php_, None
+        2. http_method, exactly matches string, _POST_ _(type in)_, None
+    3. Click on **Add Rule** and then click **Save**
+    4. Run a different WAF test script, ```` runratest ```` from your red team host to simulate excessive requests to your test site.
+    
+    The ___runratest___ script will send 400 sequential requests to _/form.php_ on your test site. When the rate-based rule action is triggered, requests will be blocked and return ***responseHTTP/1.1 403 Forbidden*** response instead of ***responseHTTP/1.1 200 OK***. 
     
     !!! info "Note About Rate-based rules"
         The rate limit of 100 over a 5 minute time span is used here to deomonstrate how the rate-based rule works. This value can be increased as needed for production deployments.  By default, AWS WAF aggregates requests based on the IP address from the web request origin, but you can configure the rule to use an IP address from an HTTP header, like X-Forwarded-For, instead. Learn more about <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html" target="_blank">Rate-based AWS WAF rules</a>.
@@ -470,29 +473,7 @@ You should consider blocking access to such elements, or limiting access to know
 
     2. Click on **Add Rule** and then click **Save**
 
-### 6. Detect & Mitigate Anomalies (Optional)
-
-What constitutes an anomaly in regards to your web application? A few common anomaly patterns are:
-
-- Unusually elevated volume of requests in general
-- Unusually elevated volumes of requests to specific URI paths
-- Unusually elevated levels of requests generating specific non-HTTP status 200 responses
-- Unusually elevated volumes from certain sources (IPs, geographies)
-- Usual request signatures (referrers, user agent strings, content types, etc)
-
-Do you have mechanisms in place to detect such patterns? If so, can you build rules to mitigate them?
-
-??? info "Solution"
-    1.	Create a new rule named **matchRateLogin** of type **Rate-based rule**
-        1. **Rate limit** 1000
-        2. choose **Only consider requests that match the criteria in a rule statement**
-        3. choose **If a request** choose **matches at least one of the statements (OR)**. Add statements:
-            1. uri_path, starts with string, _/login.php_
-            2. http_method, exactly matches string, _POST_
-            3. text transformation, _None_
-        4. Click on **Add Rule** and then click **Save**
-
-### 7. Reputation Lists, Nuisance Requests (Optional)
+### 6. Reputation Lists, Nuisance Requests (Optional)
 
 Reputation lists (whitelists or blacklists) are a good way to filter and stop servicing low value requests. This can reduce operating costs, and reduce exposure to attack vectors. Reputation lists can be self-maintained: lists of identifiable actors that you have determined are undesired. They can be identified any number of ways:
 
@@ -500,6 +481,7 @@ Reputation lists (whitelists or blacklists) are a good way to filter and stop se
 - the user agent string
 - reuse of hijacked authorization or session tokens,
 - attempting to make requests to paths that clearly do not exist in your application but are well known vulnerable software packages (probing)
+- Usual request signatures (referrers, user agent strings, content types, etc)
 
 Build blacklists of such actors using the relevant statements and set up rules to match and block them. An example IP-based blacklist already exists in your sandbox environment.
 

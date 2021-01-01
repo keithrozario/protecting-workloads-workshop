@@ -727,7 +727,7 @@ Resources:
 
                   ', ' printf "Request %d\n response" $COUNTER
 
-                  ', ' http -h ', !Join ['', ['http://', !GetAtt Alb.DNSName]], '/form.php
+                  ', ' http -h --form POST ', !Join ['', ['http://', !GetAtt Alb.DNSName]], '/form.php
 
                   ', 'done
 
