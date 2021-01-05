@@ -498,13 +498,11 @@ Reputation lists can also be maintained by third parties. The AWS WAF Security A
 
 <a href="https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html#aws-managed-rule-groups-baseline" target="_blank">AWS Managed Rules</a> for AWS WAF is a managed service that provides protection against common application vulnerabilities or other unwanted traffic, without having to write your own rules. Managed rules are also available through the <a href="https://console.aws.amazon.com/wafv2/homev2/marketplace" target="_blank">AWS Marketplace</a>.
 
-Remove the custom rules created in exercises 1 and 2 above (SQL injection, cross site scripting and traversal) and replace them with AWS Managed Rules.
+Remove the WAF rules you created in exercise 1 above (SQL injection and cross site scripting) and replace them with AWS Managed Rules.
 
 ??? info "Solution"
     1.  edit the Web ACL
-        1. Delete the **matchSQLi**, **matchXSS** and **matchTraversal** rules you created in exercises 1 and 2.
-        2. Delete the **matchXSS** rule
-        3. Delete the **matchTraversal**
+        1. Delete the **matchSQLi** and **matchXSS** rules you created in exercise 1.
         4. Re-run the WAF test script (runscanner) from your red team host to confirm which requests are blocked
     2.  Add Core and SQL database managed rules to web ACL
         1. In the Web ACL click **Add rules**, **Add managed rule groups**
