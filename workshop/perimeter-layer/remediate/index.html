@@ -633,6 +633,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#7-deploy-managed-rules-for-aws-waf-optional" title="7. Deploy Managed Rules for AWS WAF (Optional)" class="md-nav__link">
+    7. Deploy Managed Rules for AWS WAF (Optional)
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -911,6 +918,13 @@
           <li class="md-nav__item">
   <a href="#6-reputation-lists-nuisance-requests-optional" title="6. Reputation Lists, Nuisance Requests (Optional)" class="md-nav__link">
     6. Reputation Lists, Nuisance Requests (Optional)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-deploy-managed-rules-for-aws-waf-optional" title="7. Deploy Managed Rules for AWS WAF (Optional)" class="md-nav__link">
+    7. Deploy Managed Rules for AWS WAF (Optional)
   </a>
   
 </li>
@@ -1444,6 +1458,28 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 </ol>
 </li>
 <li>Use the concepts you learned in the previous exercises to add the <em>filterNoPath</em> statement to your Web ACL.</li>
+</ol>
+</details>
+<h3 id="7-deploy-managed-rules-for-aws-waf-optional">7. Deploy Managed Rules for AWS WAF (Optional)</h3>
+<p><a href="https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html#aws-managed-rule-groups-baseline" target="_blank">AWS Managed Rules</a> for AWS WAF is a managed service that provides protection against common application vulnerabilities or other unwanted traffic, without having to write your own rules. Managed rules are also available through the <a href="https://console.aws.amazon.com/wafv2/homev2/marketplace" target="_blank">AWS Marketplace</a>.</p>
+<p>Remove the custom rules created in exercises 1 and 2 above (SQL injection, cross site scripting and traversal) and replace them with AWS Managed Rules.</p>
+<details class="info"><summary>Solution</summary><ol>
+<li>edit the Web ACL<ol>
+<li>Delete the <strong>matchSQLi</strong>, <strong>matchXSS</strong> and <strong>matchTraversal</strong> rules you created in exercises 1 and 2.</li>
+<li>Delete the <strong>matchXSS</strong> rule</li>
+<li>Delete the <strong>matchTraversal</strong></li>
+<li>Re-run the WAF test script (runscanner) from your red team host to confirm which requests are blocked</li>
+</ol>
+</li>
+<li>Add Core and SQL database managed rules to web ACL<ol>
+<li>In the Web ACL click <strong>Add rules</strong>, <strong>Add managed rule groups</strong></li>
+<li>Click <strong>AWS managed rule groups</strong></li>
+<li>Click <strong>Core rule set</strong> and <strong>SQL database</strong> then click <strong>Add to web ACL</strong>
+<img alt="WAF Mgd Rules" src="../images/waf-managed-rules.png" /></li>
+</ol>
+</li>
+<li>Click on <strong>Add Rule</strong> and then click <strong>Save</strong></li>
+<li>Re-run the WAF test script (runscanner) from your red team host to confirm which requests are blocked.</li>
 </ol>
 </details>
 <hr />
