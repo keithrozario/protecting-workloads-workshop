@@ -503,7 +503,7 @@ Remove the WAF rules you created in exercise 1 above (SQL injection and cross si
 ??? info "Solution"
     1.  edit the Web ACL
         1. Delete the **matchSQLi** and **matchXSS** rules you created in exercise 1.
-        4. Re-run the WAF test script (runscanner) from your red team host to confirm which requests are blocked
+        4. Re-run the WAF test script (runscanner) from your red team host to confirm which requests are blocked.
     2.  Add Core and SQL database managed rules to web ACL
         1. In the Web ACL click **Add rules**, **Add managed rule groups**
         2. Click **AWS managed rule groups**
