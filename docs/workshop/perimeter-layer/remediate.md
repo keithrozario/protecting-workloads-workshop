@@ -494,6 +494,26 @@ Reputation lists can also be maintained by third parties. The AWS WAF Security A
         1.	uri_path, starts with, no transform, _/phpmyadmin_
     3.	Use the concepts you learned in the previous exercises to add the _filterNoPath_ statement to your Web ACL.
 
+### 7. Deploy Managed Rules for AWS WAF (Optional)
+
+<a href="https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html#aws-managed-rule-groups-baseline" target="_blank">AWS Managed Rules</a> for AWS WAF is a managed service that provides protection against common application vulnerabilities or other unwanted traffic, without having to write your own rules. Managed rules are also available through the <a href="https://console.aws.amazon.com/wafv2/homev2/marketplace" target="_blank">AWS Marketplace</a>.
+
+Remove the custom rules created in exercises 1 and 2 above (SQL injection, cross site scripting and traversal) and replace them with AWS Managed Rules.
+
+??? info "Solution"
+    1.  edit the Web ACL
+        1. Delete the **matchSQLi**, **matchXSS** and **matchTraversal** rules you created in exercises 1 and 2.
+        2. Delete the **matchXSS** rule
+        3. Delete the **matchTraversal**
+        4. Re-run the WAF test script (runscanner) from your red team host to confirm which requests are blocked
+    2.  Add Core and SQL database managed rules to web ACL
+        1. In the Web ACL click **Add rules**, **Add managed rule groups**
+        2. Click **AWS managed rule groups**
+        3. Click **Core rule set** and **SQL database** then click **Add to web ACL**
+        ![WAF Mgd Rules](./images/waf-managed-rules.png)
+    3. Click on **Add Rule** and then click **Save**
+    4. Re-run the WAF test script (runscanner) from your red team host to confirm which requests are blocked.
+
 ---
 
 You can now proceed to the [Verify Phase](verify.md).
