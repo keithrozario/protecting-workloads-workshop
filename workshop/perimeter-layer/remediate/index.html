@@ -1462,12 +1462,10 @@ Validate that you are able to see a pre-existing rule, configured to block reque
 </details>
 <h3 id="7-deploy-managed-rules-for-aws-waf-optional">7. Deploy Managed Rules for AWS WAF (Optional)</h3>
 <p><a href="https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html#aws-managed-rule-groups-baseline" target="_blank">AWS Managed Rules</a> for AWS WAF is a managed service that provides protection against common application vulnerabilities or other unwanted traffic, without having to write your own rules. Managed rules are also available through the <a href="https://console.aws.amazon.com/wafv2/homev2/marketplace" target="_blank">AWS Marketplace</a>.</p>
-<p>Remove the custom rules created in exercises 1 and 2 above (SQL injection, cross site scripting and traversal) and replace them with AWS Managed Rules.</p>
+<p>Remove the WAF rules you created in exercise 1 above (SQL injection and cross site scripting) and replace them with AWS Managed Rules.</p>
 <details class="info"><summary>Solution</summary><ol>
 <li>edit the Web ACL<ol>
-<li>Delete the <strong>matchSQLi</strong>, <strong>matchXSS</strong> and <strong>matchTraversal</strong> rules you created in exercises 1 and 2.</li>
-<li>Delete the <strong>matchXSS</strong> rule</li>
-<li>Delete the <strong>matchTraversal</strong></li>
+<li>Delete the <strong>matchSQLi</strong> and <strong>matchXSS</strong> rules you created in exercise 1.</li>
 <li>Re-run the WAF test script (runscanner) from your red team host to confirm which requests are blocked</li>
 </ol>
 </li>
