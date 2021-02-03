@@ -727,7 +727,7 @@ Resources:
 
                   ', ' printf "Request %d\n response" $COUNTER
 
-                  ', ' http -h --form POST ', !Join ['', ['http://', !GetAtt Alb.DNSName]], '/form.php
+                  ', ' http -h --form POST ', !Join ['', ['http://', !GetAtt Alb.DNSName]], '/form.php x-csrf-token:89a77f7afaedc09870a99eb15ccda32fe2a8b3f2
 
                   ', 'done
 
