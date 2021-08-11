@@ -218,7 +218,6 @@ Resources:
           Ref: 'AWS::Region'
       MapPublicIpOnLaunch: false
       Tags:
-      Tags:
         - Key: Name
           Value: !Join ["-" , [!Ref 'AWS::StackName', PubSub1]]
   sub2Public:
@@ -231,7 +230,6 @@ Resources:
         - !GetAZs 
           Ref: 'AWS::Region'
       MapPublicIpOnLaunch: false
-      Tags:
       Tags:
         - Key: Name
           Value: !Join ["-" , [!Ref 'AWS::StackName', PubSub2]]
@@ -748,7 +746,8 @@ Resources:
             #!/bin/bash -xe
             # yum update -y
             yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-            amazon-linux-extras install -y python3 
+            amazon-linux-extras enable python3.8
+            amazon-linux-extras install -y python3.8 
             yum install -y curl git python-pip httpie
             /usr/bin/aws configure set region ${AWS::Region}
             /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource RedTeamHost --configsets Scanner_Install --region ${AWS::Region}
