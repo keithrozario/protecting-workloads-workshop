@@ -734,8 +734,7 @@ Resources:
         ImageId:
           !GetAtt AMIInfo.Id
         InstanceType: !Ref EC2InstanceSize
-        IamInstanceProfile:
-          Ref: EC2InstanceProfile
+        IamInstanceProfile: !Ref EC2InstanceProfile 
         SubnetId:
               Ref: sub2Private          
         Tags:
@@ -748,7 +747,8 @@ Resources:
             yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
             amazon-linux-extras enable python3.8
             amazon-linux-extras install -y python3.8 
-            yum install -y curl git python-pip httpie
+            yum install -y curl git python-pip 
+            pip3 install httpie
             /usr/bin/aws configure set region ${AWS::Region}
             /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource RedTeamHost --configsets Scanner_Install --region ${AWS::Region}
             /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource RedTeamHost --region ${AWS::Region}
