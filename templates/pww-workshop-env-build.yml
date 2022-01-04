@@ -436,7 +436,7 @@ Resources:
             commands:
               01getsite_content:
                 cwd: /tmp
-                command: "cd /tmp; curl -O https://s3.amazonaws.com/protecting-workloads-workshop/public/artifacts/pww_site.zip"
+                command: "cd /tmp; wget https://github.com/aws-samples/protecting-workloads-workshop/raw/master/artifacts/pww_site.zip"
               02get_composer:
                 cwd: /tmp
                 env:
